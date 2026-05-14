@@ -30,28 +30,39 @@ const expertise = [
   },
 ]
 
-const projects = [
+const fieldWork = [
   {
-    title: 'Aether-1 Engine',
-    meta: '2024 / PROD',
-    body: 'A low-latency inference server built for real-time multimodal interaction. Optimized for NVIDIA H100 clusters with custom paged-attention kernels.',
+    title: 'Multi-Agent Regulatory Analysis',
+    meta: '2025 / 3E',
+    body: 'Built a multi-agent system to compare and reconcile large regulatory datasets across legacy database-backed flows and modern API-driven sources.',
     metrics: [
-      ['LATENCY:', '8.4ms (p99)'],
-      ['THROUGHPUT:', '14.2k tokens/sec'],
-      ['PRECISION:', 'Mixed-FP8/FP16'],
+      ['SYSTEM:', 'Multi-agent orchestration'],
+      ['TOOLS:', 'MCP + SQL/API interfaces'],
+      ['CONTROL:', 'Guardrails + observability'],
     ],
-    action: '[ VIEW ARCHITECTURE ]',
+    action: '[ REVIEW SYSTEM ]',
   },
   {
-    title: 'Synapse Graph',
-    meta: '2023 / R&D',
-    body: 'A vector-knowledge-graph hybrid database designed for long-context RAG applications. Utilizes hierarchical navigable small worlds for O(log n) search.',
+    title: 'Regulatory Data Pipeline',
+    meta: '2025 / 3E',
+    body: 'Developed ingestion and transformation workflows that moved API-sourced regulatory data into downstream application tables and product-ready structures.',
     metrics: [
-      ['DIMENSIONS:', '1536 / 3072'],
-      ['RECALL@10:', '0.992'],
-      ['INDEX:', 'Dynamic HNSW'],
+      ['SOURCE:', 'API ingestion'],
+      ['LAYER:', 'Staging + transforms'],
+      ['OUTCOME:', 'Consolidated processing paths'],
     ],
-    action: '[ READ PAPER ]',
+    action: '[ TRACE PIPELINE ]',
+  },
+  {
+    title: 'AI Workflow Automation',
+    meta: '2025 / 3E',
+    body: 'Designed agentic workflows for planning, implementation, testing, review, and delivery, while optimizing enterprise AI translation quality and request flow.',
+    metrics: [
+      ['IMPACT:', '~50% cycle-time reduction'],
+      ['QUALITY:', '+15% translation accuracy'],
+      ['DEPLOY:', 'Docker + AWS Lambda'],
+    ],
+    action: '[ INSPECT WORKFLOW ]',
   },
 ]
 
@@ -264,7 +275,7 @@ function Hero() {
             [ 01. PERSPECTIVE ]
           </a>
           <a href="#projects" onClick={(event) => scrollToSection(event, '#projects')}>
-            [ 02. ARTIFACTS ]
+            [ 02. FIELD WORK ]
           </a>
           <a href="#contact" onClick={(event) => scrollToSection(event, '#contact')}>
             [ 03. CONNECT ]
@@ -364,12 +375,12 @@ ProjectCard.propTypes = {
   }).isRequired,
 }
 
-function ProjectsSection() {
+function FieldWorkSection() {
   return (
     <section id="projects" className="content-section projects-section">
-      <SectionHeader title="Artifacts" section="02" />
+      <SectionHeader title="Field Work" section="02" />
       <div className="project-grid">
-        {projects.map((project) => (
+        {fieldWork.map((project) => (
           <ProjectCard project={project} key={project.title} />
         ))}
       </div>
@@ -412,7 +423,7 @@ function App() {
         <main>
           <Hero />
           <ExpertiseSection />
-          <ProjectsSection />
+          <FieldWorkSection />
           <ContactSection />
         </main>
       </div>
