@@ -540,7 +540,7 @@ function ContactSection() {
           <h2 className="serif-text">Get in Touch</h2>
           <p>
             Open to <span className="text-accent">full-time roles</span>,{' '}
-            <span className="text-accent">agentic systems work</span>, and{' '}
+            <span className="text-accent">Agentic AI</span>, and{' '}
             <span className="text-accent">selective product builds</span>.
           </p>
           <div className="contact-links">
