@@ -49,6 +49,23 @@ const fieldWork = [
     ],
   },
   {
+    title: 'StudyScribe',
+    meta: '2026 / AI STUDY PRODUCT',
+    body: (
+      <>
+        An <span className="text-accent">AI-powered study workspace</span> that turns YouTube lectures into
+        transcripts, exam notes, and transcript-grounded Q&A through a <span className="text-accent">RAG chatbot</span>.
+        Built with <span className="text-accent">Upstash Vector</span> for embedding retrieval and{' '}
+        <span className="text-accent">Upstash Redis</span> for rate limiting and caching.
+      </>
+    ),
+    metrics: [
+      ['INPUT:', 'YouTube lectures'],
+      ['AI FLOW:', 'RAG chatbot + exam notes'],
+      ['SYSTEM:', 'Gemini + Upstash Vector/Redis'],
+    ],
+  },
+  {
     title: 'Regulatory Data Pipeline',
     meta: '2025 / 3E',
     body: (
@@ -78,23 +95,6 @@ const fieldWork = [
       ['DELIVERY:', '~50% cycle-time reduction'],
       ['QUALITY:', '+15% translation accuracy'],
       ['VALIDATION:', 'Evaluation-backed changes'],
-    ],
-  },
-  {
-    title: 'StudyScribe',
-    meta: '2026 / AI STUDY PRODUCT',
-    body: (
-      <>
-        An <span className="text-accent">AI-powered study workspace</span> that turns YouTube lectures into
-        transcripts, exam notes, and transcript-grounded Q&A through a <span className="text-accent">RAG chatbot</span>.
-        Built with <span className="text-accent">Upstash Vector</span> for embedding retrieval and{' '}
-        <span className="text-accent">Upstash Redis</span> for rate limiting and caching.
-      </>
-    ),
-    metrics: [
-      ['INPUT:', 'YouTube lectures'],
-      ['AI FLOW:', 'RAG chatbot + exam notes'],
-      ['SYSTEM:', 'Gemini + Upstash Vector/Redis'],
     ],
   },
 ]
