@@ -289,8 +289,8 @@ function Header({ isHidden }) {
         <div className="status-muted">Agentic AI Engineer @ 3E</div>
       </div>
       <div className="system-status">
-        <span>Core.Process: Running</span>
-        <span className="status-active">[ACTIVE] SOC_2.LBL</span>
+        <span>Agent.Runtime: Online</span>
+        <span className="status-active">[ACTIVE] PORTFOLIO_V1</span>
       </div>
     </header>
   )
@@ -304,19 +304,19 @@ function Annotation({ align = 'left' }) {
   const left = align === 'left'
   const data = left
     ? {
-        title: ['Core Model', 'Diagnostics'],
+        title: ['Agent', 'Workflow'],
         rows: [
-          ['0.08', 'Loss', 'Converge'],
-          ['175B', 'Params', 'Active'],
-          ['98.4', '%', 'Precision'],
+          ['03', 'Systems', 'Built'],
+          ['MCP', 'Tools', 'Active'],
+          ['15%', 'Quality', 'Gain'],
         ],
       }
     : {
-        title: ['Inference', 'Vector Map'],
+        title: ['Delivery', 'Signal'],
         rows: [
-          ['12ms', 'Latency', 'Target'],
-          ['40k', 'Tokens', 'Min-P'],
-          ['1.2T', 'Tokens', 'Processed'],
+          ['~50%', 'Cycle', 'Reduction'],
+          ['AWS', 'Lambda', 'Deploy'],
+          ['3E', 'Production', 'Work'],
         ],
       }
 
@@ -497,7 +497,7 @@ function ContactSection() {
     <section id="contact" className="contact-section">
       <div className="contact-inner">
         <div className="transparent-card">
-          <h2 className="serif-text">Initialize Protocol</h2>
+          <h2 className="serif-text">Get in Touch</h2>
           <p>Open for research collaborations, high-bandwidth compute discussions, and architectural advisory.</p>
           <div className="contact-links">
             <a href="mailto:haseebzaheer26@gmail.com">
@@ -514,7 +514,7 @@ function ContactSection() {
             </a>
           </div>
         </div>
-        <div className="footer-code">2024 HASEEB ZAHEER // NOVEL INTELLIGENCE SYSTEMS // [51.5074 N, 0.1278 W]</div>
+        <div className="footer-code">2026 HASEEB ZAHEER // AGENTIC AI SYSTEMS // HASEEBZAHEER.DEV</div>
       </div>
     </section>
   )
