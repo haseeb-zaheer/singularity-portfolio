@@ -35,31 +35,49 @@ const fieldWork = [
   {
     title: 'Multi-Agent Regulatory Analysis',
     meta: '2025 / 3E',
-    body: 'Built a multi-agent system to compare and reconcile large regulatory datasets across legacy database-backed flows and modern API-driven sources.',
+    body: (
+      <>
+        Built a <span className="text-accent">multi-agent regulatory mapping system</span> with orchestrated domain
+        agents, scoped <span className="text-accent">MCP tools</span>, <span className="text-accent">guardrails</span>,
+        tracking, and <span className="text-accent">observability</span> for long-running parity workflows.
+      </>
+    ),
     metrics: [
-      ['SYSTEM:', 'Multi-agent orchestration'],
-      ['TOOLS:', 'MCP + SQL/API interfaces'],
-      ['CONTROL:', 'Guardrails + observability'],
+      ['ARCHITECTURE:', 'Orchestrator + domain agents'],
+      ['SAFETY:', 'Guardrails + scoped tools'],
+      ['VISIBILITY:', 'Tracking + observability'],
     ],
   },
   {
     title: 'Regulatory Data Pipeline',
     meta: '2025 / 3E',
-    body: 'Developed ingestion and transformation workflows that moved API-sourced regulatory data into downstream application tables and product-ready structures.',
+    body: (
+      <>
+        Built <span className="text-accent">API ingestion</span> and{' '}
+        <span className="text-accent">transformation workflows</span> that create cleaner handoff points for{' '}
+        <span className="text-accent">downstream data models</span> and product-ready regulatory structures.
+      </>
+    ),
     metrics: [
       ['SOURCE:', 'API ingestion'],
-      ['LAYER:', 'Staging + transforms'],
+      ['HANDOFF:', 'Downstream data readiness'],
       ['OUTCOME:', 'Consolidated processing paths'],
     ],
   },
   {
     title: 'AI Workflow Automation',
     meta: '2025 / 3E',
-    body: 'Designed agentic workflows for planning, implementation, testing, review, and delivery, while optimizing enterprise AI translation quality and request flow.',
+    body: (
+      <>
+        Designed <span className="text-accent">AI-assisted</span> planning, implementation, testing, review, and{' '}
+        <span className="text-accent">delivery workflows</span>, while improving multilingual translation quality
+        through <span className="text-accent">evaluation-backed iteration</span>.
+      </>
+    ),
     metrics: [
-      ['IMPACT:', '~50% cycle-time reduction'],
+      ['DELIVERY:', '~50% cycle-time reduction'],
       ['QUALITY:', '+15% translation accuracy'],
-      ['DEPLOY:', 'Docker + AWS Lambda'],
+      ['VALIDATION:', 'Evaluation-backed changes'],
     ],
   },
 ]
@@ -371,8 +389,9 @@ function Hero({ onSectionScroll }) {
       </div>
       <div className="hero-footer">
         <div className="hero-summary">
-          Building agentic workflows, regulatory data pipelines, and AI-assisted delivery systems for production
-          engineering teams.
+          Building <span className="text-accent">multi-agent systems</span>,{' '}
+          <span className="text-accent">AI-enabled workflows</span>, and automation pipelines that turn complex
+          operational problems into <span className="text-accent">reliable engineering products</span>.
         </div>
         <nav className="hero-nav" aria-label="Portfolio sections">
           <a href="#about" onClick={(event) => scrollToSection(event, '#about')}>
@@ -443,8 +462,12 @@ function ExpertiseSection() {
         ))}
       </div>
       <div className="about-footer">
-        <div>Currently building production AI workflows for regulatory intelligence.</div>
-        <blockquote className="serif-text">&quot;Reliable agents start with reliable systems.&quot;</blockquote>
+        <div>
+          Designing <span className="text-accent">practical AI systems</span> with{' '}
+          <span className="text-accent">guardrails</span>, <span className="text-accent">observability</span>, and
+          maintainable handoff paths.
+        </div>
+        <blockquote className="serif-text">&quot;Practical architecture over novelty for its own sake.&quot;</blockquote>
       </div>
     </section>
   )
@@ -472,7 +495,7 @@ function ProjectCard({ project }) {
 
 ProjectCard.propTypes = {
   project: PropTypes.shape({
-    body: PropTypes.string.isRequired,
+    body: PropTypes.node.isRequired,
     meta: PropTypes.string.isRequired,
     metrics: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
     title: PropTypes.string.isRequired,
@@ -498,7 +521,11 @@ function ContactSection() {
       <div className="contact-inner">
         <div className="transparent-card">
           <h2 className="serif-text">Get in Touch</h2>
-          <p>Open for research collaborations, high-bandwidth compute discussions, and architectural advisory.</p>
+          <p>
+            Open to <span className="text-accent">full-time roles</span>,{' '}
+            <span className="text-accent">agentic systems work</span>, and{' '}
+            <span className="text-accent">selective product builds</span>.
+          </p>
           <div className="contact-links">
             <a href="mailto:haseebzaheer26@gmail.com">
               <span>EMAIL:</span>

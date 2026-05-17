@@ -188,6 +188,11 @@
   font-family: var(--font-mono);
 }
 
+.text-accent {
+  color: var(--accent);
+  font-weight: 500;
+}
+
 .site-header {
   position: fixed;
   top: 0;
