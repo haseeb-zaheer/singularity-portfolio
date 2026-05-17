@@ -6,6 +6,7 @@
   --fg-muted: #888888;
   --fg-dark: #444444;
   --line-color: rgba(136, 85, 170, 0.2);
+  --accent: #8855aa;
   --font-serif: 'EB Garamond', serif;
   --font-mono: 'JetBrains Mono', monospace;
   font-family: var(--font-mono);
@@ -26,6 +27,28 @@ html {
   min-width: 320px;
   background: var(--bg);
   scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
@@ -38,6 +61,7 @@ body {
   color: var(--fg);
   font-family: var(--font-mono);
   font-size: 11px;
+  -ms-overflow-style: none;
 }
 
 button,
@@ -51,7 +75,12 @@ select {
   min-height: 100vh;
 }
 
-::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+*::-webkit-scrollbar {
   width: 4px;
 }
 

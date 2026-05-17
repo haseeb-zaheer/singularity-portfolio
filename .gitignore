@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Local/private workspace artifacts
+.playwright-mcp/
+portfolio-*.png
+work_experience.md
+public/vite.svg
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

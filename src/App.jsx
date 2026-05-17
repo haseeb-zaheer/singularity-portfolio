@@ -1,31 +1,32 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
+import Lenis from 'lenis'
 import * as THREE from 'three'
 import './App.css'
 
 const expertise = [
   {
-    title: ['Deep Learning', 'Systems'],
+    title: ['Agentic AI', 'Systems'],
     items: [
-      ['TRANSFORMERS', 'Custom attention mechanisms, sparse kernels, and FlashAttention implementations.'],
-      ['OPTIMIZATION', 'Quantization (FP8/INT4), distributed training with DeepSpeed, and fused CUDA kernels.'],
-      ['ARCHITECTURE', 'Mixture of Experts (MoE) scaling and hierarchical representation learning.'],
+      ['ORCHESTRATION', 'Multi-agent workflows with orchestrators, domain agents, and tool-backed execution paths.'],
+      ['MCP TOOLING', 'Source-specific MCP interfaces for querying, mapping, progress tracking, and controlled automation.'],
+      ['GUARDRAILS', 'Risk-aware agent design with boundaries for sensitive data handling, reliability, and traceability.'],
     ],
   },
   {
-    title: ['Natural Language', 'Processing'],
+    title: ['Regulatory Data', 'Engineering'],
     items: [
-      ['ALIGNMENT', 'RLHF, DPO, and constitutional AI frameworks for behavioral steering.'],
-      ['RETRIEVAL', 'Advanced RAG pipelines with hybrid vector-graph search and reranking.'],
-      ['AGENTICS', 'Multi-step reasoning loops and tool-use orchestration for autonomous workflows.'],
+      ['MODERNIZATION', 'Migration support across legacy database-backed systems and modern API-driven data platforms.'],
+      ['INGESTION', 'API data ingestion into downstream application tables with cleaner, consolidated processing paths.'],
+      ['TRANSFORMS', 'Staging and transformation workflows that shape raw regulatory data into product-ready structures.'],
     ],
   },
   {
-    title: ['Computer', 'Vision'],
+    title: ['AI Workflow', 'Automation'],
     items: [
-      ['MULTIMODAL', 'Contrastive learning (CLIP-style) and cross-modal projection spaces.'],
-      ['GENERATIVE', 'Diffusion models and flow-matching for high-fidelity image synthesis.'],
-      ['SPATIAL', '3D scene reconstruction and neural radiance fields (NeRF) integration.'],
+      ['DELIVERY LOOPS', 'AI-assisted planning, implementation, testing, review, git operations, and handoff workflows.'],
+      ['EVALUATION', 'Translation quality optimization using multilingual validation and evaluation-driven iteration.'],
+      ['DEPLOYMENT', 'Dockerized agent and workflow deployment patterns for cloud/serverless environments.'],
     ],
   },
 ]
@@ -40,7 +41,6 @@ const fieldWork = [
       ['TOOLS:', 'MCP + SQL/API interfaces'],
       ['CONTROL:', 'Guardrails + observability'],
     ],
-    action: '[ REVIEW SYSTEM ]',
   },
   {
     title: 'Regulatory Data Pipeline',
@@ -51,7 +51,6 @@ const fieldWork = [
       ['LAYER:', 'Staging + transforms'],
       ['OUTCOME:', 'Consolidated processing paths'],
     ],
-    action: '[ TRACE PIPELINE ]',
   },
   {
     title: 'AI Workflow Automation',
@@ -62,9 +61,110 @@ const fieldWork = [
       ['QUALITY:', '+15% translation accuracy'],
       ['DEPLOY:', 'Docker + AWS Lambda'],
     ],
-    action: '[ INSPECT WORKFLOW ]',
   },
 ]
+
+const loadingStatusMessages = [
+  { text: 'Loading portfolio assets...', code: 'LOAD_AST' },
+  { text: 'Mounting visual library...', code: 'MNT_VISUAL' },
+  { text: 'Calibrating display engine...', code: 'CALIB_DISP' },
+  { text: 'Optimizing render paths...', code: 'OPT_RENDER' },
+  { text: 'Synchronizing content modules...', code: 'SYNC_MOD' },
+  { text: 'Finalizing composition...', code: 'FIN_COMP' },
+  { text: 'Establishing connection...', code: 'CONN_EST' },
+  { text: 'Welcome.', code: 'READY' },
+]
+
+function LoadingOverlay({ onDone, onReveal }) {
+  const [progress, setProgress] = useState(0)
+  const [messageIndex, setMessageIndex] = useState(0)
+  const [isScanning, setIsScanning] = useState(false)
+  const [isExiting, setIsExiting] = useState(false)
+  const status = loadingStatusMessages[messageIndex]
+
+  useEffect(() => {
+    const timeouts = new Set()
+
+    const schedule = (callback, delay) => {
+      const id = window.setTimeout(() => {
+        timeouts.delete(id)
+        callback()
+      }, delay)
+      timeouts.add(id)
+    }
+
+    const completeLoading = () => {
+      schedule(() => {
+        setIsScanning(true)
+        schedule(() => {
+          onReveal()
+          setIsExiting(true)
+          schedule(onDone, 1500)
+        }, 500)
+      }, 500)
+    }
+
+    const updateLoading = (currentProgress) => {
+      if (currentProgress >= 100) {
+        setProgress(100)
+        setMessageIndex(loadingStatusMessages.length - 1)
+        completeLoading()
+        return
+      }
+
+      const increment = Math.random() * 8
+      const nextProgress = Math.min(100, currentProgress + increment)
+      const nextMessageIndex = Math.floor((nextProgress / 100) * (loadingStatusMessages.length - 1))
+
+      setProgress(nextProgress)
+      setMessageIndex(nextMessageIndex)
+      schedule(() => updateLoading(nextProgress), Math.random() * 300 + 100)
+    }
+
+    schedule(() => updateLoading(0), 250)
+
+    return () => {
+      timeouts.forEach((id) => window.clearTimeout(id))
+      timeouts.clear()
+    }
+  }, [onDone, onReveal])
+
+  return (
+    <div className={`loading-overlay ${isExiting ? 'loading-overlay-exit' : ''}`}>
+      <div className="initialization-grid" />
+      <div className={`reveal-scanline ${isScanning ? 'scanning' : ''}`} />
+
+      <div className="loader-container">
+        <div className="loader-heading">
+          <div className="serif-text loader-name">H_ZAHEER</div>
+          <div className="mono-text loader-version">Portfolio System v2.0.4</div>
+        </div>
+
+        <div className="loader-meta">
+          <span>{`${Math.floor(progress).toString().padStart(2, '0')}%`}</span>
+          <span>{status.code}</span>
+        </div>
+
+        <div className="progress-bar-bg">
+          <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+        </div>
+
+        <div className="status-text-container" aria-live="polite">
+          <div className="status-line" key={status.text}>
+            {status.text}
+          </div>
+        </div>
+      </div>
+
+      <div className="loader-footer">Loading Experience // Please wait</div>
+    </div>
+  )
+}
+
+LoadingOverlay.propTypes = {
+  onDone: PropTypes.func.isRequired,
+  onReveal: PropTypes.func.isRequired,
+}
 
 function NeuralField() {
   const mountRef = useRef(null)
@@ -186,7 +286,7 @@ function Header() {
     <header className="site-header">
       <div className="brand-cluster">
         <div className="serif-text brand-name">h_zaheer</div>
-        <div className="status-muted">Research Engineer</div>
+        <div className="status-muted">Agentic AI Engineer @ 3E</div>
       </div>
       <div className="system-status">
         <span>Core.Process: Running</span>
@@ -248,10 +348,10 @@ Annotation.propTypes = {
   align: PropTypes.oneOf(['left', 'right']),
 }
 
-function Hero() {
+function Hero({ onSectionScroll }) {
   const scrollToSection = (event, id) => {
     event.preventDefault()
-    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
+    onSectionScroll(id)
   }
 
   return (
@@ -261,14 +361,14 @@ function Hero() {
         <Annotation align="left" />
         <div className="hero-title-block">
           <h1 className="serif-text hero-title">Haseeb Zaheer</h1>
-          <p className="mono-text hero-kicker">Architecting Latent Representations</p>
+          <p className="mono-text hero-kicker">Engineering Multi-Agent AI Workflows</p>
         </div>
         <Annotation align="right" />
       </div>
       <div className="hero-footer">
         <div className="hero-summary">
-          Developing novel architectures for deep learning, focusing on the intersection of structural efficiency and
-          emergent reasoning.
+          Building agentic workflows, regulatory data pipelines, and AI-assisted delivery systems for production
+          engineering teams.
         </div>
         <nav className="hero-nav" aria-label="Portfolio sections">
           <a href="#about" onClick={(event) => scrollToSection(event, '#about')}>
@@ -284,6 +384,10 @@ function Hero() {
       </div>
     </section>
   )
+}
+
+Hero.propTypes = {
+  onSectionScroll: PropTypes.func.isRequired,
 }
 
 function SectionHeader({ title, section }) {
@@ -335,8 +439,8 @@ function ExpertiseSection() {
         ))}
       </div>
       <div className="about-footer">
-        <div>Currently exploring the entropy of latent manifolds.</div>
-        <blockquote className="serif-text">&quot;Intelligence is a function of pattern density.&quot;</blockquote>
+        <div>Currently building production AI workflows for regulatory intelligence.</div>
+        <blockquote className="serif-text">&quot;Reliable agents start with reliable systems.&quot;</blockquote>
       </div>
     </section>
   )
@@ -358,16 +462,12 @@ function ProjectCard({ project }) {
           </div>
         ))}
       </div>
-      <a href="/" onClick={(event) => event.preventDefault()}>
-        {project.action}
-      </a>
     </article>
   )
 }
 
 ProjectCard.propTypes = {
   project: PropTypes.shape({
-    action: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
     meta: PropTypes.string.isRequired,
     metrics: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
@@ -415,18 +515,80 @@ function ContactSection() {
 }
 
 function App() {
+  const [isSiteVisible, setIsSiteVisible] = useState(false)
+  const [isLoaderMounted, setIsLoaderMounted] = useState(true)
+  const lenisRef = useRef(null)
+
+  const revealSite = useCallback(() => {
+    setIsSiteVisible(true)
+  }, [])
+
+  const removeLoader = useCallback(() => {
+    setIsLoaderMounted(false)
+  }, [])
+
+  const scrollToSection = useCallback((target) => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(target, {
+        duration: 1.45,
+        easing: (time) => Math.min(1, 1.001 - 2 ** (-10 * time)),
+      })
+      return
+    }
+
+    document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    if (!isLoaderMounted) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isLoaderMounted])
+
+  useEffect(() => {
+    if (!isSiteVisible) return undefined
+
+    const lenis = new Lenis({
+      lerp: 0.075,
+      smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 0.85,
+    })
+    let animationFrame = 0
+
+    const raf = (time) => {
+      lenis.raf(time)
+      animationFrame = window.requestAnimationFrame(raf)
+    }
+
+    lenisRef.current = lenis
+    animationFrame = window.requestAnimationFrame(raf)
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+      lenis.destroy()
+      lenisRef.current = null
+    }
+  }, [isSiteVisible])
+
   return (
     <>
       <NeuralField />
-      <div className="ui-wrapper">
+      <div className={`ui-wrapper ${isSiteVisible ? 'visible-content' : 'hidden-content'}`}>
         <Header />
         <main>
-          <Hero />
+          <Hero onSectionScroll={scrollToSection} />
           <ExpertiseSection />
           <FieldWorkSection />
           <ContactSection />
         </main>
       </div>
+      {isLoaderMounted && <LoadingOverlay onDone={removeLoader} onReveal={revealSite} />}
     </>
   )
 }
