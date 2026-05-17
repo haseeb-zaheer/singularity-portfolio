@@ -281,9 +281,9 @@ function NeuralField() {
   return <div ref={mountRef} className="webgl-container" aria-hidden="true" />
 }
 
-function Header() {
+function Header({ isHidden }) {
   return (
-    <header className="site-header">
+    <header className={`site-header ${isHidden ? 'site-header-hidden' : ''}`}>
       <div className="brand-cluster">
         <div className="serif-text brand-name">haseeb_zaheer</div>
         <div className="status-muted">Agentic AI Engineer @ 3E</div>
@@ -294,6 +294,10 @@ function Header() {
       </div>
     </header>
   )
+}
+
+Header.propTypes = {
+  isHidden: PropTypes.bool.isRequired,
 }
 
 function Annotation({ align = 'left' }) {
@@ -517,7 +521,9 @@ function ContactSection() {
 function App() {
   const [isSiteVisible, setIsSiteVisible] = useState(false)
   const [isLoaderMounted, setIsLoaderMounted] = useState(true)
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false)
   const lenisRef = useRef(null)
+  const lastScrollYRef = useRef(0)
 
   const revealSite = useCallback(() => {
     setIsSiteVisible(true)
@@ -576,11 +582,37 @@ function App() {
     }
   }, [isSiteVisible])
 
+  useEffect(() => {
+    if (!isSiteVisible) return undefined
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      const scrollDelta = currentScrollY - lastScrollYRef.current
+
+      if (currentScrollY < 48) {
+        setIsHeaderHidden(false)
+      } else if (scrollDelta > 6) {
+        setIsHeaderHidden(true)
+      } else if (scrollDelta < -6) {
+        setIsHeaderHidden(false)
+      }
+
+      lastScrollYRef.current = currentScrollY
+    }
+
+    lastScrollYRef.current = window.scrollY
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isSiteVisible])
+
   return (
     <>
       <NeuralField />
       <div className={`ui-wrapper ${isSiteVisible ? 'visible-content' : 'hidden-content'}`}>
-        <Header />
+        <Header isHidden={isHeaderHidden} />
         <main>
           <Hero onSectionScroll={scrollToSection} />
           <ExpertiseSection />
