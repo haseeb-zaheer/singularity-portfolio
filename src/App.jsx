@@ -80,6 +80,23 @@ const fieldWork = [
       ['VALIDATION:', 'Evaluation-backed changes'],
     ],
   },
+  {
+    title: 'StudyScribe',
+    meta: '2026 / AI STUDY PRODUCT',
+    body: (
+      <>
+        An <span className="text-accent">AI-powered study workspace</span> that turns YouTube lectures into
+        transcripts, exam notes, and transcript-grounded Q&A through a <span className="text-accent">RAG chatbot</span>.
+        Built with <span className="text-accent">Upstash Vector</span> for embedding retrieval and{' '}
+        <span className="text-accent">Upstash Redis</span> for rate limiting and caching.
+      </>
+    ),
+    metrics: [
+      ['INPUT:', 'YouTube lectures'],
+      ['AI FLOW:', 'RAG chatbot + exam notes'],
+      ['SYSTEM:', 'Gemini + Upstash Vector/Redis'],
+    ],
+  },
 ]
 
 const loadingStatusMessages = [
@@ -303,7 +320,7 @@ function Header({ isHidden }) {
   return (
     <header className={`site-header ${isHidden ? 'site-header-hidden' : ''}`}>
       <div className="brand-cluster">
-        <div className="serif-text brand-name">haseeb zaheer</div>
+        <div className="serif-text brand-name">Haseeb Zaheer</div>
         <div className="status-muted">Agentic AI Engineer @ 3E</div>
       </div>
       <div className="system-status">
@@ -324,7 +341,7 @@ function Annotation({ align = 'left' }) {
     ? {
         title: ['Agent', 'Workflow'],
         rows: [
-          ['03', 'Systems', 'Built'],
+          ['04', 'Systems', 'Built'],
           ['MCP', 'Tools', 'Active'],
           ['15%', 'Quality', 'Gain'],
         ],
@@ -398,7 +415,7 @@ function Hero({ onSectionScroll }) {
             [ 01. PERSPECTIVE ]
           </a>
           <a href="#projects" onClick={(event) => scrollToSection(event, '#projects')}>
-            [ 02. FIELD WORK ]
+            [ 02. APPLIED AI WORK ]
           </a>
           <a href="#contact" onClick={(event) => scrollToSection(event, '#contact')}>
             [ 03. CONNECT ]
@@ -505,7 +522,7 @@ ProjectCard.propTypes = {
 function FieldWorkSection() {
   return (
     <section id="projects" className="content-section projects-section">
-      <SectionHeader title="Field Work" section="02" />
+      <SectionHeader title="Applied AI Work" section="02" />
       <div className="project-grid">
         {fieldWork.map((project) => (
           <ProjectCard project={project} key={project.title} />

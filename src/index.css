@@ -9,6 +9,11 @@
   --accent: #8855aa;
   --font-serif: 'EB Garamond', serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --text-caption: 9px;
+  --text-nav: 10px;
+  --text-small: 11px;
+  --text-body: 13px;
+  --text-metric: 11px;
   font-family: var(--font-mono);
   color: var(--fg);
   background: var(--bg);
@@ -60,7 +65,7 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-small);
   -ms-overflow-style: none;
 }
 
