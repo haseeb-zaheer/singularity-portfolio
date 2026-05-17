@@ -496,21 +496,23 @@ function ContactSection() {
   return (
     <section id="contact" className="contact-section">
       <div className="contact-inner">
-        <h2 className="serif-text">Initialize Protocol</h2>
-        <p>Open for research collaborations, high-bandwidth compute discussions, and architectural advisory.</p>
-        <div className="contact-links">
-          <a href="mailto:haseebzaheer26@gmail.com">
-            <span>EMAIL:</span>
-            <strong>haseebzaheer26@gmail.com</strong>
-          </a>
-          <a href="https://github.com/haseeb-zaheer" target="_blank" rel="noreferrer">
-            <span>GITHUB:</span>
-            <strong>/haseeb-zaheer</strong>
-          </a>
-          <a href="https://www.linkedin.com/in/haseeb-zaheer" target="_blank" rel="noreferrer">
-            <span>LINKEDIN:</span>
-            <strong>/in/haseeb-zaheer</strong>
-          </a>
+        <div className="transparent-card">
+          <h2 className="serif-text">Initialize Protocol</h2>
+          <p>Open for research collaborations, high-bandwidth compute discussions, and architectural advisory.</p>
+          <div className="contact-links">
+            <a href="mailto:haseebzaheer26@gmail.com">
+              <span>EMAIL:</span>
+              <strong>haseebzaheer26@gmail.com</strong>
+            </a>
+            <a href="https://github.com/haseeb-zaheer" target="_blank" rel="noreferrer">
+              <span>GITHUB:</span>
+              <strong>/haseeb-zaheer</strong>
+            </a>
+            <a href="https://www.linkedin.com/in/haseeb-zaheer" target="_blank" rel="noreferrer">
+              <span>LINKEDIN:</span>
+              <strong>/in/haseeb-zaheer</strong>
+            </a>
+          </div>
         </div>
         <div className="footer-code">2024 HASEEB ZAHEER // NOVEL INTELLIGENCE SYSTEMS // [51.5074 N, 0.1278 W]</div>
       </div>
