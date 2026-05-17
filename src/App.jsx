@@ -136,7 +136,7 @@ function LoadingOverlay({ onDone, onReveal }) {
 
       <div className="loader-container">
         <div className="loader-heading">
-          <div className="serif-text loader-name">H_ZAHEER</div>
+          <div className="serif-text loader-name">HASEEB_ZAHEER</div>
           <div className="mono-text loader-version">Portfolio System v2.0.4</div>
         </div>
 
@@ -285,7 +285,7 @@ function Header() {
   return (
     <header className="site-header">
       <div className="brand-cluster">
-        <div className="serif-text brand-name">h_zaheer</div>
+        <div className="serif-text brand-name">haseeb_zaheer</div>
         <div className="status-muted">Agentic AI Engineer @ 3E</div>
       </div>
       <div className="system-status">
