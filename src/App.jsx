@@ -136,7 +136,7 @@ function LoadingOverlay({ onDone, onReveal }) {
 
       <div className="loader-container">
         <div className="loader-heading">
-          <div className="serif-text loader-name">HASEEB_ZAHEER</div>
+          <div className="serif-text loader-name">HASEEB ZAHEER</div>
           <div className="mono-text loader-version">Portfolio System v2.0.4</div>
         </div>
 
@@ -285,7 +285,7 @@ function Header({ isHidden }) {
   return (
     <header className={`site-header ${isHidden ? 'site-header-hidden' : ''}`}>
       <div className="brand-cluster">
-        <div className="serif-text brand-name">haseeb_zaheer</div>
+        <div className="serif-text brand-name">haseeb zaheer</div>
         <div className="status-muted">Agentic AI Engineer @ 3E</div>
       </div>
       <div className="system-status">
