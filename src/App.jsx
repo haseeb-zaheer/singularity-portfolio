@@ -202,22 +202,13 @@ LoadingOverlay.propTypes = {
 
 const neuralFieldQualityPresets = {
   reduced: { dpr: 1, fps: 0, lines: 1200, segments: 24 },
-  low: { dpr: 1, fps: 30, lines: 1800, segments: 30 },
   medium: { dpr: 1.25, fps: 30, lines: 3500, segments: 40 },
-  high: { dpr: 1.5, fps: 30, lines: 5000, segments: 45 },
 }
 
 function getNeuralFieldQuality() {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (prefersReducedMotion) return neuralFieldQualityPresets.reduced
 
-  const cpuCores = navigator.hardwareConcurrency || 4
-  const viewportPixels = window.innerWidth * window.innerHeight
-  const isConstrainedDevice = cpuCores <= 4 || viewportPixels < 900000
-  const isHighCapacityDevice = cpuCores >= 8 && viewportPixels >= 1600000 && window.devicePixelRatio <= 2
-
-  if (isConstrainedDevice) return neuralFieldQualityPresets.low
-  if (isHighCapacityDevice) return neuralFieldQualityPresets.high
   return neuralFieldQualityPresets.medium
 }
 
