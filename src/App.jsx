@@ -200,6 +200,27 @@ LoadingOverlay.propTypes = {
   onReveal: PropTypes.func.isRequired,
 }
 
+const neuralFieldQualityPresets = {
+  reduced: { dpr: 1, fps: 0, lines: 1200, segments: 24 },
+  low: { dpr: 1, fps: 30, lines: 1800, segments: 30 },
+  medium: { dpr: 1.25, fps: 30, lines: 3500, segments: 40 },
+  high: { dpr: 1.5, fps: 30, lines: 5000, segments: 45 },
+}
+
+function getNeuralFieldQuality() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (prefersReducedMotion) return neuralFieldQualityPresets.reduced
+
+  const cpuCores = navigator.hardwareConcurrency || 4
+  const viewportPixels = window.innerWidth * window.innerHeight
+  const isConstrainedDevice = cpuCores <= 4 || viewportPixels < 900000
+  const isHighCapacityDevice = cpuCores >= 8 && viewportPixels >= 1600000 && window.devicePixelRatio <= 2
+
+  if (isConstrainedDevice) return neuralFieldQualityPresets.low
+  if (isHighCapacityDevice) return neuralFieldQualityPresets.high
+  return neuralFieldQualityPresets.medium
+}
+
 function NeuralField() {
   const mountRef = useRef(null)
 
@@ -207,24 +228,26 @@ function NeuralField() {
     const container = mountRef.current
     if (!container) return undefined
 
+    const quality = getNeuralFieldQuality()
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x0d0015)
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
     camera.position.set(0, 0, 60)
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false })
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dpr))
     container.appendChild(renderer.domElement)
 
-    const numLines = 8000
-    const segmentsPerLine = 60
+    const numLines = quality.lines
+    const segmentsPerLine = quality.segments
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(numLines * segmentsPerLine * 3)
-    const indices = []
+    const indices = new Uint32Array(numLines * (segmentsPerLine - 1) * 2)
 
     let pIndex = 0
+    let iIndex = 0
     const height = 60
     const radiusBase = 20
 
@@ -263,12 +286,14 @@ function NeuralField() {
       for (let j = 0; j < segmentsPerLine - 1; j += 1) {
         const a = i * segmentsPerLine + j
         const b = i * segmentsPerLine + j + 1
-        indices.push(a, b)
+        indices[iIndex] = a
+        indices[iIndex + 1] = b
+        iIndex += 2
       }
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    geometry.setIndex(indices)
+    geometry.setIndex(new THREE.BufferAttribute(indices, 1))
 
     const material = new THREE.LineBasicMaterial({
       color: 0x8855aa,
@@ -284,31 +309,47 @@ function NeuralField() {
     scene.add(linesMesh)
 
     const startTime = performance.now()
+    const frameInterval = quality.fps > 0 ? 1000 / quality.fps : 0
     let animationFrame = 0
+    let lastRenderTime = 0
 
-    const animate = () => {
-      animationFrame = window.requestAnimationFrame(animate)
-      const elapsedSeconds = (performance.now() - startTime) / 1000
+    const renderFrame = (timestamp = performance.now()) => {
+      const elapsedSeconds = (timestamp - startTime) / 1000
       linesMesh.rotation.y = elapsedSeconds * 0.04
       renderer.render(scene, camera)
+    }
+
+    const animate = (timestamp) => {
+      animationFrame = window.requestAnimationFrame(animate)
+      if (timestamp - lastRenderTime < frameInterval) return
+
+      lastRenderTime = timestamp
+      renderFrame(timestamp)
     }
 
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dpr))
+      renderFrame()
     }
 
-    animate()
+    if (quality.fps === 0) {
+      renderFrame()
+    } else {
+      animationFrame = window.requestAnimationFrame(animate)
+    }
+
     window.addEventListener('resize', handleResize)
 
     return () => {
-      window.cancelAnimationFrame(animationFrame)
+      if (animationFrame) window.cancelAnimationFrame(animationFrame)
       window.removeEventListener('resize', handleResize)
       geometry.dispose()
       material.dispose()
       renderer.dispose()
-      container.removeChild(renderer.domElement)
+      renderer.domElement.remove()
     }
   }, [])
 
