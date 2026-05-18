@@ -22,7 +22,7 @@
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 1.5s ease-in, visibility 1.5s ease-in;
+  transition: opacity 1100ms ease-in, visibility 1100ms ease-in;
 }
 
 .visible-content {
@@ -40,7 +40,7 @@
   justify-content: center;
   overflow: hidden;
   background: var(--bg);
-  transition: opacity 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+  transition: opacity 1100ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .loading-overlay-exit {
@@ -72,7 +72,7 @@
 }
 
 .reveal-scanline.scanning {
-  animation: scan-down 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation: scan-down 1100ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
 .loader-container {

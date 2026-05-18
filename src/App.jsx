@@ -100,14 +100,13 @@ const fieldWork = [
 ]
 
 const loadingStatusMessages = [
-  { text: 'Loading portfolio assets...', code: 'LOAD_AST' },
-  { text: 'Mounting visual library...', code: 'MNT_VISUAL' },
-  { text: 'Calibrating display engine...', code: 'CALIB_DISP' },
-  { text: 'Optimizing render paths...', code: 'OPT_RENDER' },
-  { text: 'Synchronizing content modules...', code: 'SYNC_MOD' },
-  { text: 'Finalizing composition...', code: 'FIN_COMP' },
-  { text: 'Establishing connection...', code: 'CONN_EST' },
-  { text: 'Welcome.', code: 'READY' },
+  { text: 'Indexing applied AI work...', code: 'IDX_WORK' },
+  { text: 'Loading agentic workflow traces...', code: 'LOAD_AGENT' },
+  { text: 'Resolving project context...', code: 'RES_CTX' },
+  { text: 'Preparing neural field...', code: 'PREP_FIELD' },
+  { text: 'Composing portfolio interface...', code: 'COMP_UI' },
+  { text: 'Finalizing contact layer...', code: 'FIN_CONTACT' },
+  { text: 'Ready.', code: 'READY' },
 ]
 
 function LoadingOverlay({ onDone, onReveal }) {
@@ -134,9 +133,9 @@ function LoadingOverlay({ onDone, onReveal }) {
         schedule(() => {
           onReveal()
           setIsExiting(true)
-          schedule(onDone, 1500)
-        }, 500)
-      }, 500)
+          schedule(onDone, 1100)
+        }, 450)
+      }, 350)
     }
 
     const updateLoading = (currentProgress) => {
@@ -147,16 +146,16 @@ function LoadingOverlay({ onDone, onReveal }) {
         return
       }
 
-      const increment = Math.random() * 8
+      const increment = Math.random() * 7 + 7
       const nextProgress = Math.min(100, currentProgress + increment)
       const nextMessageIndex = Math.floor((nextProgress / 100) * (loadingStatusMessages.length - 1))
 
       setProgress(nextProgress)
       setMessageIndex(nextMessageIndex)
-      schedule(() => updateLoading(nextProgress), Math.random() * 300 + 100)
+      schedule(() => updateLoading(nextProgress), Math.random() * 120 + 120)
     }
 
-    schedule(() => updateLoading(0), 250)
+    schedule(() => updateLoading(0), 150)
 
     return () => {
       timeouts.forEach((id) => window.clearTimeout(id))
@@ -172,7 +171,7 @@ function LoadingOverlay({ onDone, onReveal }) {
       <div className="loader-container">
         <div className="loader-heading">
           <div className="serif-text loader-name">HASEEB ZAHEER</div>
-          <div className="mono-text loader-version">Portfolio System v2.0.4</div>
+          <div className="mono-text loader-version">Agentic AI Portfolio</div>
         </div>
 
         <div className="loader-meta">
@@ -191,7 +190,7 @@ function LoadingOverlay({ onDone, onReveal }) {
         </div>
       </div>
 
-      <div className="loader-footer">Loading Experience // Please wait</div>
+      <div className="loader-footer">Initializing Interface</div>
     </div>
   )
 }
