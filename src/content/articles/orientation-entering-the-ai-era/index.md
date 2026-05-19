@@ -1,3 +1,13 @@
+---
+title: "Orientation: Entering the AI Era"
+slug: "orientation-entering-the-ai-era"
+date: "2026-05-19"
+description: "Notes on LLMs, agents, RAG, MCP, and production AI workflows."
+tags: ["AI", "LLMs", "Agents", "RAG", "MCP"]
+readTime: "12 min"
+type: "Learning Note"
+---
+
 ## Orientation: Entering the AI Era
 
 ### Main Principles Learned
