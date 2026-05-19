@@ -63,15 +63,17 @@ function normalizeArticle(rawArticle, path) {
   const { content, data } = parseArticleMarkdown(rawArticle)
   const folderSlug = toArticlePath(path)
   const slug = data.slug || folderSlug
+  const title = data.title || slug
+  const normalizedContent = content.replace(new RegExp(`^#{1,2}\\s+${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\n+`), '')
 
   return {
-    content,
+    content: normalizedContent,
     date: data.date || '',
     description: data.description || '',
     readTime: data.readTime || '',
     slug,
     tags: Array.isArray(data.tags) ? data.tags : [],
-    title: data.title || slug,
+    title,
     type: data.type || 'Article',
   }
 }
