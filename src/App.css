@@ -658,6 +658,10 @@ section {
   backdrop-filter: blur(2px);
 }
 
+.article-page .footer-code {
+  text-align: center;
+}
+
 .article-return {
   margin-bottom: 4rem;
   font-size: var(--text-nav);

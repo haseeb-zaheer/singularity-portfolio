@@ -593,10 +593,14 @@ function ContactSection() {
             </a>
           </div>
         </div>
-        <div className="footer-code">2026 HASEEB ZAHEER // AGENTIC AI SYSTEMS // HASEEBZAHEER.DEV</div>
+        <FooterCode />
       </div>
     </section>
   )
+}
+
+function FooterCode() {
+  return <div className="footer-code">2026 HASEEB ZAHEER // AGENTIC AI SYSTEMS // HASEEBZAHEER.DEV</div>
 }
 
 function YouTubeEmbed({ videoId }) {
@@ -682,6 +686,8 @@ function ArticleDetailPage({ article }) {
         <article className="article-content">
           <ArticleMarkdown article={article} />
         </article>
+
+        <FooterCode />
       </section>
     </main>
   )
@@ -726,6 +732,7 @@ function ArticlesIndexPage() {
             </a>
           ))}
         </div>
+        <FooterCode />
       </section>
     </main>
   )
@@ -743,6 +750,7 @@ function ArticleNotFoundPage() {
           <h1 className="serif-text">Article Not Found</h1>
           <p>The requested article does not exist in the current article index.</p>
         </div>
+        <FooterCode />
       </section>
     </main>
   )

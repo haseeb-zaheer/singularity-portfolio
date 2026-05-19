@@ -13,7 +13,12 @@ dist-ssr
 *.local
 
 # Local/private workspace artifacts
+.codex/
 .playwright-mcp/
+articles_to_be_ingested/
+AGENTS.md
+PROFILE.md
+Screenshot*.jpg
 portfolio-*.png
 work_experience.md
 public/vite.svg
