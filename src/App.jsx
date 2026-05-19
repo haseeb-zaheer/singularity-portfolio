@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import Lenis from 'lenis'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import * as THREE from 'three'
+import { articles, getArticleBySlug, getYouTubeVideoId, resolveArticleImage } from './content/articles'
 import './App.css'
 
 const expertise = [
@@ -451,6 +454,7 @@ function Hero({ onSectionScroll }) {
           <a href="#contact" onClick={(event) => scrollToSection(event, '#contact')}>
             [ 03. CONNECT ]
           </a>
+          <a href="/articles">[ 04. ARTICLES ]</a>
         </nav>
       </div>
     </section>
@@ -595,81 +599,150 @@ function ContactSection() {
   )
 }
 
-function ArticleExamplePage() {
+function YouTubeEmbed({ videoId }) {
+  return (
+    <span className="youtube-embed">
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}`}
+        title="Embedded YouTube video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+      />
+    </span>
+  )
+}
+
+YouTubeEmbed.propTypes = {
+  videoId: PropTypes.string.isRequired,
+}
+
+function ArticleMarkdown({ article }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        a({ children, href }) {
+          const videoId = getYouTubeVideoId(href)
+          if (videoId) return <YouTubeEmbed videoId={videoId} />
+
+          return (
+            <a href={href} target={href?.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
+              {children}
+            </a>
+          )
+        },
+        img({ alt, src }) {
+          return <img alt={alt || ''} src={resolveArticleImage(article.slug, src)} loading="lazy" />
+        },
+      }}
+    >
+      {article.content}
+    </ReactMarkdown>
+  )
+}
+
+ArticleMarkdown.propTypes = {
+  article: PropTypes.shape({
+    content: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
+  }).isRequired,
+}
+
+function ArticleDetailPage({ article }) {
   return (
     <main>
       <section className="article-page">
         <div className="article-return">
-          <a href="/">[ RETURN HOME ]</a>
+          <a href="/articles">[ ALL ARTICLES ]</a>
         </div>
 
         <header className="article-hero">
           <div className="article-meta-rail">
             <div>
               <span>TYPE</span>
-              <strong>FIELD NOTE</strong>
+              <strong>{article.type}</strong>
             </div>
             <div>
               <span>DATE</span>
-              <strong>2026.05.19</strong>
+              <strong>{article.date}</strong>
             </div>
             <div>
               <span>READ</span>
-              <strong>06 MIN</strong>
+              <strong>{article.readTime}</strong>
             </div>
           </div>
 
           <div className="article-heading">
-            <div className="article-kicker">Article // Agentic AI</div>
-            <h1 className="serif-text">Designing Multi-Agent Workflows That Stay Useful</h1>
-            <p>
-              A practical note on building agentic systems around bounded tools, traceable handoffs, and evaluation
-              loops instead of open-ended autonomy.
-            </p>
+            <div className="article-kicker">Article // {article.tags[0] || 'Field Note'}</div>
+            <h1 className="serif-text">{article.title}</h1>
+            <p>{article.description}</p>
           </div>
         </header>
 
         <article className="article-content">
-          <p className="article-lede">
-            The useful part of an agentic system is rarely the model call by itself. The value usually appears in the
-            coordination layer: how work is decomposed, which tools are allowed, where evidence is stored, and how the
-            system recovers when an intermediate step is wrong.
-          </p>
-
-          <h2 className="serif-text">Start with bounded responsibility</h2>
-          <p>
-            I prefer designing agents as narrow operators with explicit contracts. One agent may classify source
-            material, another may map regulatory concepts, and another may validate gaps against known requirements.
-            The orchestrator should make the sequence legible rather than magical.
-          </p>
-
-          <blockquote className="serif-text">
-            Autonomy becomes useful when the system can explain what it did, why it did it, and what it refused to do.
-          </blockquote>
-
-          <h2 className="serif-text">Tools need scopes, not just access</h2>
-          <p>
-            Tool-use works best when every integration has a narrow purpose. A retrieval tool should know what corpus it
-            can search. A write tool should have guardrails around what it can mutate. A progress tracker should capture
-            checkpoints in language that engineers and reviewers can inspect later.
-          </p>
-
-          <div className="article-code-block">
-            <span>WORKFLOW_SHAPE</span>
-            <pre>{`orchestrator -> retrieve context
-orchestrator -> assign domain agent
-domain agent -> produce mapped output
-review agent -> validate evidence
-system -> persist trace + handoff`}</pre>
-          </div>
-
-          <h2 className="serif-text">Evaluation keeps the loop honest</h2>
-          <p>
-            Without evaluation, the workflow eventually becomes a demo. The system needs checks that measure whether
-            outputs are complete, grounded, and useful to the next human or machine step. That feedback loop matters
-            more than adding another agent.
-          </p>
+          <ArticleMarkdown article={article} />
         </article>
+      </section>
+    </main>
+  )
+}
+
+ArticleDetailPage.propTypes = {
+  article: PropTypes.shape({
+    date: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    readTime: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+    title: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+  }).isRequired,
+}
+
+function ArticlesIndexPage() {
+  return (
+    <main>
+      <section className="article-page article-index-page">
+        <div className="article-return">
+          <a href="/">[ RETURN HOME ]</a>
+        </div>
+        <header className="section-header">
+          <h1 className="serif-text section-title">Articles</h1>
+          <div className="section-index">Index // Notes</div>
+        </header>
+        <div className="article-index-grid">
+          {articles.map((article) => (
+            <a className="article-list-card" href={`/articles/${article.slug}`} key={article.slug}>
+              <div className="article-list-meta">
+                <span>{article.type}</span>
+                <span>{article.date}</span>
+              </div>
+              <h2 className="serif-text">{article.title}</h2>
+              <p>{article.description}</p>
+              <div className="article-tag-row">
+                {article.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function ArticleNotFoundPage() {
+  return (
+    <main>
+      <section className="article-page article-empty-page">
+        <div className="article-return">
+          <a href="/articles">[ ALL ARTICLES ]</a>
+        </div>
+        <div className="article-empty-state">
+          <div className="article-kicker">Article // Missing</div>
+          <h1 className="serif-text">Article Not Found</h1>
+          <p>The requested article does not exist in the current article index.</p>
+        </div>
       </section>
     </main>
   )
@@ -679,7 +752,10 @@ function App() {
   const [isSiteVisible, setIsSiteVisible] = useState(false)
   const [isLoaderMounted, setIsLoaderMounted] = useState(true)
   const [isHeaderHidden, setIsHeaderHidden] = useState(false)
-  const isArticleRoute = window.location.pathname === '/articles/example'
+  const pathname = window.location.pathname.replace(/\/$/, '') || '/'
+  const isArticlesIndexRoute = pathname === '/articles'
+  const articleSlug = pathname.startsWith('/articles/') ? decodeURIComponent(pathname.replace('/articles/', '')) : null
+  const activeArticle = articleSlug ? getArticleBySlug(articleSlug) : null
   const lenisRef = useRef(null)
   const lastScrollYRef = useRef(0)
 
@@ -771,8 +847,12 @@ function App() {
       <NeuralField />
       <div className={`ui-wrapper ${isSiteVisible ? 'visible-content' : 'hidden-content'}`}>
         <Header isHidden={isHeaderHidden} />
-        {isArticleRoute ? (
-          <ArticleExamplePage />
+        {isArticlesIndexRoute ? (
+          <ArticlesIndexPage />
+        ) : articleSlug && activeArticle ? (
+          <ArticleDetailPage article={activeArticle} />
+        ) : articleSlug ? (
+          <ArticleNotFoundPage />
         ) : (
           <main>
             <Hero onSectionScroll={scrollToSection} />
