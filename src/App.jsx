@@ -595,10 +595,91 @@ function ContactSection() {
   )
 }
 
+function ArticleExamplePage() {
+  return (
+    <main>
+      <section className="article-page">
+        <div className="article-return">
+          <a href="/">[ RETURN HOME ]</a>
+        </div>
+
+        <header className="article-hero">
+          <div className="article-meta-rail">
+            <div>
+              <span>TYPE</span>
+              <strong>FIELD NOTE</strong>
+            </div>
+            <div>
+              <span>DATE</span>
+              <strong>2026.05.19</strong>
+            </div>
+            <div>
+              <span>READ</span>
+              <strong>06 MIN</strong>
+            </div>
+          </div>
+
+          <div className="article-heading">
+            <div className="article-kicker">Article // Agentic AI</div>
+            <h1 className="serif-text">Designing Multi-Agent Workflows That Stay Useful</h1>
+            <p>
+              A practical note on building agentic systems around bounded tools, traceable handoffs, and evaluation
+              loops instead of open-ended autonomy.
+            </p>
+          </div>
+        </header>
+
+        <article className="article-content">
+          <p className="article-lede">
+            The useful part of an agentic system is rarely the model call by itself. The value usually appears in the
+            coordination layer: how work is decomposed, which tools are allowed, where evidence is stored, and how the
+            system recovers when an intermediate step is wrong.
+          </p>
+
+          <h2 className="serif-text">Start with bounded responsibility</h2>
+          <p>
+            I prefer designing agents as narrow operators with explicit contracts. One agent may classify source
+            material, another may map regulatory concepts, and another may validate gaps against known requirements.
+            The orchestrator should make the sequence legible rather than magical.
+          </p>
+
+          <blockquote className="serif-text">
+            Autonomy becomes useful when the system can explain what it did, why it did it, and what it refused to do.
+          </blockquote>
+
+          <h2 className="serif-text">Tools need scopes, not just access</h2>
+          <p>
+            Tool-use works best when every integration has a narrow purpose. A retrieval tool should know what corpus it
+            can search. A write tool should have guardrails around what it can mutate. A progress tracker should capture
+            checkpoints in language that engineers and reviewers can inspect later.
+          </p>
+
+          <div className="article-code-block">
+            <span>WORKFLOW_SHAPE</span>
+            <pre>{`orchestrator -> retrieve context
+orchestrator -> assign domain agent
+domain agent -> produce mapped output
+review agent -> validate evidence
+system -> persist trace + handoff`}</pre>
+          </div>
+
+          <h2 className="serif-text">Evaluation keeps the loop honest</h2>
+          <p>
+            Without evaluation, the workflow eventually becomes a demo. The system needs checks that measure whether
+            outputs are complete, grounded, and useful to the next human or machine step. That feedback loop matters
+            more than adding another agent.
+          </p>
+        </article>
+      </section>
+    </main>
+  )
+}
+
 function App() {
   const [isSiteVisible, setIsSiteVisible] = useState(false)
   const [isLoaderMounted, setIsLoaderMounted] = useState(true)
   const [isHeaderHidden, setIsHeaderHidden] = useState(false)
+  const isArticleRoute = window.location.pathname === '/articles/example'
   const lenisRef = useRef(null)
   const lastScrollYRef = useRef(0)
 
@@ -690,12 +771,16 @@ function App() {
       <NeuralField />
       <div className={`ui-wrapper ${isSiteVisible ? 'visible-content' : 'hidden-content'}`}>
         <Header isHidden={isHeaderHidden} />
-        <main>
-          <Hero onSectionScroll={scrollToSection} />
-          <ExpertiseSection />
-          <FieldWorkSection />
-          <ContactSection />
-        </main>
+        {isArticleRoute ? (
+          <ArticleExamplePage />
+        ) : (
+          <main>
+            <Hero onSectionScroll={scrollToSection} />
+            <ExpertiseSection />
+            <FieldWorkSection />
+            <ContactSection />
+          </main>
+        )}
       </div>
       {isLoaderMounted && <LoadingOverlay onDone={removeLoader} onReveal={revealSite} />}
     </>
