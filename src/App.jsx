@@ -765,7 +765,6 @@ function App() {
   const articleSlug = pathname.startsWith('/articles/') ? decodeURIComponent(pathname.replace('/articles/', '')) : null
   const activeArticle = articleSlug ? getArticleBySlug(articleSlug) : null
   const lenisRef = useRef(null)
-  const lastScrollYRef = useRef(0)
 
   const revealSite = useCallback(() => {
     setIsSiteVisible(true)
@@ -828,21 +827,10 @@ function App() {
     if (!isSiteVisible) return undefined
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      const scrollDelta = currentScrollY - lastScrollYRef.current
-
-      if (currentScrollY < 48) {
-        setIsHeaderHidden(false)
-      } else if (scrollDelta > 6) {
-        setIsHeaderHidden(true)
-      } else if (scrollDelta < -6) {
-        setIsHeaderHidden(false)
-      }
-
-      lastScrollYRef.current = currentScrollY
+      setIsHeaderHidden(window.scrollY >= 48)
     }
 
-    lastScrollYRef.current = window.scrollY
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
