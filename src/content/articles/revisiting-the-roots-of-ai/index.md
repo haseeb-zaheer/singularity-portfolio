@@ -1,6 +1,6 @@
 ---
-title: "From Prediction to Partnership: What I Learned About Modern AI"
-slug: "from-prediction-to-partnership"
+title: "Revisiting the Roots of AI"
+slug: "revisiting-the-roots-of-ai"
 date: "2026-05-19"
 description: "A practical reflection on modern AI concepts, from LLM foundations and prompting to RAG, agents, MCP, and responsible production systems."
 tags: ["AI", "LLMs", "Agents", "RAG", "MCP"]
@@ -8,7 +8,7 @@ readTime: "7 min"
 type: "Article"
 ---
 
-# From Prediction to Partnership: What I Learned About Modern AI
+# Revisiting the Roots of AI
 
 AI is often presented through polished demos: a model answers a question, explains code, summarizes a document, or drafts a plan in seconds. What feels almost magical is not only the output, but the way so much behavior emerges from a few core ideas repeated at scale: tokens, parameters, training, inference, context, retrieval, tools, agents, and validation.
 
