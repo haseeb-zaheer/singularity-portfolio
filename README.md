@@ -62,6 +62,18 @@ Vercel settings:
 - Build command: `npm run build`
 - Output directory: `dist`
 
+Second-brain chat environment:
+
+```text
+SECOND_BRAIN_BACKEND_SECRET=
+SECOND_BRAIN_API_URL=https://rag.haseebzaheer.dev/api/chat
+SECOND_BRAIN_RATE_LIMIT_PER_MINUTE=5
+SECOND_BRAIN_RATE_LIMIT_PER_DAY=25
+SECOND_BRAIN_REQUEST_TIMEOUT_MS=55000
+```
+
+`SECOND_BRAIN_BACKEND_SECRET` must match the protected RAG backend secret and must only be set in Vercel/server-side environments. Do not expose it through `VITE_*` variables.
+
 Custom domain:
 
 - `haseebzaheer.dev`
