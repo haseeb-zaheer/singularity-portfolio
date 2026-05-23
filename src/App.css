@@ -275,6 +275,15 @@ section {
   text-align: center;
 }
 
+.hero-core {
+  z-index: 20;
+  display: grid;
+  justify-items: center;
+  gap: 2.25rem;
+  width: min(42rem, 100%);
+  transform: translateY(-3.5rem);
+}
+
 .hero-title {
   margin-bottom: 1rem;
   font-size: clamp(4.5rem, 8vw, 6rem);
@@ -287,6 +296,157 @@ section {
   color: var(--accent);
   font-size: var(--text-nav);
   letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+
+.second-brain-chat {
+  width: min(33rem, 100%);
+  padding: 1rem;
+  border: 1px solid rgba(136, 85, 170, 0.36);
+  background: rgba(5, 0, 10, 0.62);
+  box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.chatbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+  color: var(--fg-dark);
+  font-size: var(--text-caption);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.chatbox-header span:first-child {
+  color: var(--accent);
+}
+
+.chatbox-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  height: 13.5rem;
+  overflow-y: auto;
+  padding: 0.85rem;
+  border-left: 1px solid var(--fg-dark);
+  background: rgba(13, 0, 21, 0.72);
+  text-align: left;
+}
+
+.chatbox-empty p {
+  margin-bottom: 0.9rem;
+  color: var(--fg-muted);
+  font-size: var(--text-body);
+  line-height: 1.65;
+}
+
+.chatbox-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chatbox-suggestions button,
+.chatbox-form button {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+}
+
+.chatbox-suggestions button {
+  min-height: 2.15rem;
+  padding: 0.45rem 0.65rem;
+  color: var(--fg-muted);
+  font-size: var(--text-caption);
+  line-height: 1.35;
+  text-align: left;
+}
+
+.chatbox-suggestions button:hover,
+.chatbox-form button:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(136, 85, 170, 0.08);
+  color: var(--accent);
+}
+
+.chatbox-suggestions button:disabled,
+.chatbox-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.chat-message {
+  max-width: 88%;
+  padding: 0.65rem 0.75rem;
+  font-size: var(--text-body);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.chat-message-user {
+  align-self: flex-end;
+  border: 1px solid rgba(136, 85, 170, 0.5);
+  background: rgba(136, 85, 170, 0.14);
+  color: var(--fg);
+}
+
+.chat-message-assistant {
+  align-self: flex-start;
+  border: 1px solid #222;
+  background: #05000a;
+  color: var(--fg-muted);
+}
+
+.chatbox-error {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(255, 106, 106, 0.35);
+  background: rgba(70, 0, 20, 0.28);
+  color: #ffb6b6;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  text-align: left;
+}
+
+.chatbox-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5rem;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.chatbox-form textarea {
+  width: 100%;
+  min-height: 2.85rem;
+  max-height: 7rem;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(5, 0, 10, 0.74);
+  color: var(--fg);
+  font-size: var(--text-body);
+  line-height: 1.45;
+  outline: none;
+  padding: 0.7rem 0.75rem;
+}
+
+.chatbox-form textarea:focus {
+  border-color: var(--accent);
+}
+
+.chatbox-form textarea::placeholder {
+  color: var(--fg-dark);
+}
+
+.chatbox-form button {
+  min-height: 2.85rem;
+  font-size: var(--text-nav);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -958,6 +1118,10 @@ section {
     min-height: 62vh;
   }
 
+  .hero-core {
+    transform: translateY(-2rem);
+  }
+
   .expertise-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1001,6 +1165,33 @@ section {
   .hero-kicker {
     letter-spacing: 0.28em;
     line-height: 1.8;
+  }
+
+  .hero-core {
+    gap: 1.5rem;
+    transform: translateY(-1rem);
+  }
+
+  .second-brain-chat {
+    padding: 0.85rem;
+  }
+
+  .chatbox-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .chatbox-messages {
+    height: 12.5rem;
+  }
+
+  .chatbox-form {
+    grid-template-columns: 1fr;
+  }
+
+  .chatbox-form button {
+    letter-spacing: 0.1em;
   }
 
   .hero-footer,

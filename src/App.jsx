@@ -421,6 +421,133 @@ Annotation.propTypes = {
   align: PropTypes.oneOf(['left', 'right']),
 }
 
+const secondBrainStarterQuestions = [
+  'Who is Haseeb?',
+  'What kinds of AI systems does Haseeb build?',
+  'How does Haseeb like to work with teams?',
+]
+
+function createChatMessage(role, content) {
+  return {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    role,
+    content,
+  }
+}
+
+function SecondBrainChat() {
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState('')
+  const [error, setError] = useState('')
+  const [isSending, setIsSending] = useState(false)
+  const messagesRef = useRef(null)
+
+  useEffect(() => {
+    messagesRef.current?.scrollTo({
+      top: messagesRef.current.scrollHeight,
+      behavior: 'smooth',
+    })
+  }, [messages, isSending])
+
+  const sendMessage = async (content) => {
+    const trimmed = content.trim()
+
+    if (!trimmed || isSending) return
+
+    const userMessage = createChatMessage('user', trimmed)
+    const history = messages.map((message) => ({
+      role: message.role,
+      content: message.content,
+    }))
+
+    setMessages((currentMessages) => [...currentMessages, userMessage])
+    setInput('')
+    setError('')
+    setIsSending(true)
+
+    try {
+      const response = await fetch('/api/second-brain-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: trimmed,
+          history,
+        }),
+      })
+      const payload = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'The second brain is unavailable right now.')
+      }
+
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        createChatMessage('assistant', payload.answer || 'I could not find an answer for that.'),
+      ])
+    } catch (sendError) {
+      setError(sendError instanceof Error ? sendError.message : 'Something went wrong.')
+    } finally {
+      setIsSending(false)
+    }
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    void sendMessage(input)
+  }
+
+  return (
+    <div className="second-brain-chat" aria-label="Second brain chat">
+      <div className="chatbox-header">
+        <span>Second Brain</span>
+        <span>{isSending ? 'Retrieving Context' : 'Context Online'}</span>
+      </div>
+      <div className="chatbox-messages" ref={messagesRef} aria-live="polite">
+        {messages.length === 0 ? (
+          <div className="chatbox-empty">
+            <p>Ask my second brain about projects, articles, workflows, or how I think through AI systems.</p>
+            <div className="chatbox-suggestions">
+              {secondBrainStarterQuestions.map((question) => (
+                <button disabled={isSending} key={question} onClick={() => void sendMessage(question)} type="button">
+                  {question}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          messages.map((message) => (
+            <div className={`chat-message chat-message-${message.role}`} key={message.id}>
+              {message.content}
+            </div>
+          ))
+        )}
+        {isSending ? <div className="chat-message chat-message-assistant">Thinking...</div> : null}
+      </div>
+      {error ? <div className="chatbox-error">{error}</div> : null}
+      <form className="chatbox-form" onSubmit={handleSubmit}>
+        <textarea
+          aria-label="Ask my second brain"
+          maxLength={4000}
+          onChange={(event) => setInput(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+              event.preventDefault()
+              void sendMessage(input)
+            }
+          }}
+          placeholder="Ask about Haseeb..."
+          value={input}
+        />
+        <button disabled={isSending || !input.trim()} type="submit">
+          Send
+        </button>
+      </form>
+    </div>
+  )
+}
+
 function Hero({ onSectionScroll }) {
   const scrollToSection = (event, id) => {
     event.preventDefault()
@@ -432,9 +559,12 @@ function Hero({ onSectionScroll }) {
       <div />
       <div className="hero-centerline">
         <Annotation align="left" />
-        <div className="hero-title-block">
-          <h1 className="serif-text hero-title">Haseeb Zaheer</h1>
-          <p className="mono-text hero-kicker">Engineering Multi-Agent AI Workflows</p>
+        <div className="hero-core">
+          <div className="hero-title-block">
+            <h1 className="serif-text hero-title">Haseeb Zaheer</h1>
+            <p className="mono-text hero-kicker">Engineering Multi-Agent AI Workflows</p>
+          </div>
+          <SecondBrainChat />
         </div>
         <Annotation align="right" />
       </div>
