@@ -386,7 +386,7 @@ section {
   padding: 0.65rem 0.75rem;
   font-size: var(--text-body);
   line-height: 1.55;
-  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .chat-message-user {
@@ -401,6 +401,46 @@ section {
   border: 1px solid #222;
   background: #05000a;
   color: var(--fg-muted);
+}
+
+.chat-message-text {
+  white-space: pre-wrap;
+}
+
+.chat-message-assistant p,
+.chat-message-assistant ul,
+.chat-message-assistant ol {
+  margin: 0 0 0.65rem;
+}
+
+.chat-message-assistant p:last-child,
+.chat-message-assistant ul:last-child,
+.chat-message-assistant ol:last-child {
+  margin-bottom: 0;
+}
+
+.chat-message-assistant ul,
+.chat-message-assistant ol {
+  padding-left: 1.15rem;
+}
+
+.chat-message-assistant li {
+  margin-bottom: 0.42rem;
+}
+
+.chat-message-assistant li:last-child {
+  margin-bottom: 0;
+}
+
+.chat-message-assistant strong {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.chat-message-assistant a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
 }
 
 .chatbox-error {

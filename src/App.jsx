@@ -435,6 +435,36 @@ function createChatMessage(role, content) {
   }
 }
 
+function ChatMessageContent({ message }) {
+  if (message.role === 'user') {
+    return <span className="chat-message-text">{message.content}</span>
+  }
+
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        a({ children, href }) {
+          return (
+            <a href={href} target={href?.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
+              {children}
+            </a>
+          )
+        },
+      }}
+    >
+      {message.content}
+    </ReactMarkdown>
+  )
+}
+
+ChatMessageContent.propTypes = {
+  message: PropTypes.shape({
+    content: PropTypes.string.isRequired,
+    role: PropTypes.oneOf(['user', 'assistant']).isRequired,
+  }).isRequired,
+}
+
 function SecondBrainChat() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
@@ -519,7 +549,7 @@ function SecondBrainChat() {
         ) : (
           messages.map((message) => (
             <div className={`chat-message chat-message-${message.role}`} key={message.id}>
-              {message.content}
+              <ChatMessageContent message={message} />
             </div>
           ))
         )}
