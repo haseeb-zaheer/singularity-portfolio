@@ -697,7 +697,9 @@ function SecondBrainChat() {
           maxLength={4000}
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+            if (event.nativeEvent.isComposing) return
+
+            if (event.key === 'Enter' && !event.shiftKey) {
               event.preventDefault()
               void sendMessage(input)
             }
