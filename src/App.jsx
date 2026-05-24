@@ -810,21 +810,33 @@ function SecondBrainSection() {
       <SectionHeader title="Ask My Second Brain" section="01" />
       <div className="second-brain-panel">
         <div className="second-brain-copy">
-          <p>Ask about my AI systems, engineering work, collaboration style, or fit for a role.</p>
-          <div className="terminal-block second-brain-terminal">
-            <div className="terminal-item">
-              <span>ROUTE</span>
-              <br />
-              Portfolio proxy to private RAG backend
+          <div className="second-brain-eyebrow">Private RAG Interface</div>
+          <p className="second-brain-lead">
+            Ask about my AI systems, engineering work, collaboration style, or fit for a role.
+          </p>
+          <div className="second-brain-signal-stack" aria-label="Second brain context signals">
+            <div className="second-brain-signal">
+              <span>Corpus</span>
+              <strong>Projects, notes, articles</strong>
             </div>
-            <div className="terminal-item">
-              <span>MODE</span>
-              <br />
-              Streaming second-brain retrieval
+            <div className="second-brain-signal">
+              <span>Route</span>
+              <strong>Portfolio proxy</strong>
+            </div>
+            <div className="second-brain-signal">
+              <span>Mode</span>
+              <strong>Streaming retrieval</strong>
             </div>
           </div>
         </div>
-        <SecondBrainChat />
+        <div className="second-brain-console">
+          <div className="second-brain-console-rail" aria-hidden="true">
+            <span>01</span>
+            <span>RAG</span>
+            <span>SSE</span>
+          </div>
+          <SecondBrainChat />
+        </div>
       </div>
     </section>
   )
