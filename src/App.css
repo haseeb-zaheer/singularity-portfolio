@@ -1223,11 +1223,30 @@ section {
   }
 
   .chatbox-messages {
-    height: 12.5rem;
+    height: auto;
+    max-height: 12rem;
+    padding: 0.75rem;
   }
 
   .chatbox-form {
     grid-template-columns: 1fr;
+    gap: 0.7rem;
+    margin-top: 0.7rem;
+  }
+
+  .chatbox-empty p {
+    margin-bottom: 0.75rem;
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+
+  .chatbox-suggestions {
+    gap: 0.45rem;
+  }
+
+  .chatbox-suggestions button {
+    min-height: 2rem;
+    padding: 0.42rem 0.6rem;
   }
 
   .chatbox-form button {
