@@ -731,7 +731,14 @@ function Hero({ onSectionScroll }) {
             <h1 className="serif-text hero-title">Haseeb Zaheer</h1>
             <p className="mono-text hero-kicker">Engineering Multi-Agent AI Workflows</p>
           </div>
-          <SecondBrainChat />
+          <div className="hero-actions" aria-label="Primary actions">
+            <a className="hero-action hero-action-primary" href="#second-brain" onClick={(event) => scrollToSection(event, '#second-brain')}>
+              Talk to my second brain
+            </a>
+            <a className="hero-action" href="#projects" onClick={(event) => scrollToSection(event, '#projects')}>
+              View applied work
+            </a>
+          </div>
         </div>
         <Annotation align="right" />
       </div>
@@ -742,16 +749,19 @@ function Hero({ onSectionScroll }) {
           operational problems into <span className="text-accent">reliable engineering products</span>.
         </div>
         <nav className="hero-nav" aria-label="Portfolio sections">
+          <a href="#second-brain" onClick={(event) => scrollToSection(event, '#second-brain')}>
+            [ 01. SECOND BRAIN ]
+          </a>
           <a href="#about" onClick={(event) => scrollToSection(event, '#about')}>
-            [ 01. PERSPECTIVE ]
+            [ 02. PERSPECTIVE ]
           </a>
           <a href="#projects" onClick={(event) => scrollToSection(event, '#projects')}>
-            [ 02. APPLIED AI WORK ]
+            [ 03. APPLIED AI WORK ]
           </a>
           <a href="#contact" onClick={(event) => scrollToSection(event, '#contact')}>
-            [ 03. CONNECT ]
+            [ 04. CONNECT ]
           </a>
-          <a href="/articles">[ 04. ARTICLES ]</a>
+          <a href="/articles">[ 05. ARTICLES ]</a>
         </nav>
       </div>
     </section>
@@ -794,10 +804,36 @@ TerminalBlock.propTypes = {
   items: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
 }
 
+function SecondBrainSection() {
+  return (
+    <section id="second-brain" className="content-section second-brain-section">
+      <SectionHeader title="Ask My Second Brain" section="01" />
+      <div className="second-brain-panel">
+        <div className="second-brain-copy">
+          <p>Ask about my AI systems, engineering work, collaboration style, or fit for a role.</p>
+          <div className="terminal-block second-brain-terminal">
+            <div className="terminal-item">
+              <span>ROUTE</span>
+              <br />
+              Portfolio proxy to private RAG backend
+            </div>
+            <div className="terminal-item">
+              <span>MODE</span>
+              <br />
+              Streaming second-brain retrieval
+            </div>
+          </div>
+        </div>
+        <SecondBrainChat />
+      </div>
+    </section>
+  )
+}
+
 function ExpertiseSection() {
   return (
     <section id="about" className="content-section about-section">
-      <SectionHeader title="Domain Expertise" section="01" />
+      <SectionHeader title="Domain Expertise" section="02" />
       <div className="expertise-grid">
         {expertise.map((column) => (
           <article className="expertise-col" key={column.title.join('-')}>
@@ -854,7 +890,7 @@ ProjectCard.propTypes = {
 function FieldWorkSection() {
   return (
     <section id="projects" className="content-section projects-section">
-      <SectionHeader title="Applied AI Work" section="02" />
+      <SectionHeader title="Applied AI Work" section="03" />
       <div className="project-grid">
         {fieldWork.map((project) => (
           <ProjectCard project={project} key={project.title} />
@@ -1149,6 +1185,7 @@ function App() {
         ) : (
           <main>
             <Hero onSectionScroll={scrollToSection} />
+            <SecondBrainSection />
             <ExpertiseSection />
             <FieldWorkSection />
             <ContactSection />

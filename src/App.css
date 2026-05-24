@@ -279,7 +279,7 @@ section {
   z-index: 20;
   display: grid;
   justify-items: center;
-  gap: 2.25rem;
+  gap: 2rem;
   width: min(42rem, 100%);
   transform: translateY(-3.5rem);
 }
@@ -297,6 +297,43 @@ section {
   font-size: var(--text-nav);
   letter-spacing: 0.4em;
   text-transform: uppercase;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.hero-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(5, 0, 10, 0.55);
+  color: var(--fg);
+  font-size: var(--text-nav);
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-action:hover {
+  border-color: var(--accent);
+  background: rgba(136, 85, 170, 0.08);
+  color: var(--accent);
+}
+
+.hero-action-primary {
+  border-color: rgba(136, 85, 170, 0.72);
+  background: rgba(136, 85, 170, 0.14);
+  box-shadow: 0 0.8rem 2rem rgba(136, 85, 170, 0.08);
 }
 
 .second-brain-chat {
@@ -631,6 +668,40 @@ section {
 
 .hero-nav a:hover {
   color: var(--fg-muted);
+}
+
+.second-brain-section {
+  background: rgba(13, 0, 21, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.second-brain-panel {
+  display: grid;
+  grid-template-columns: minmax(12rem, 20rem) minmax(0, 1fr);
+  gap: 4rem;
+  align-items: start;
+  width: min(82rem, 100%);
+  margin: 5rem auto 0;
+}
+
+.second-brain-copy {
+  display: grid;
+  gap: 2rem;
+  color: var(--fg-muted);
+  font-size: var(--text-body);
+  line-height: 1.7;
+}
+
+.second-brain-copy p {
+  margin: 0;
+}
+
+.second-brain-terminal {
+  margin-bottom: 0;
+}
+
+.second-brain-panel .second-brain-chat {
+  justify-self: end;
 }
 
 .about-section {
@@ -1173,6 +1244,16 @@ section {
     transform: translateY(-2rem);
   }
 
+  .second-brain-panel {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .second-brain-panel .second-brain-chat {
+    justify-self: stretch;
+  }
+
   .expertise-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1221,6 +1302,14 @@ section {
   .hero-core {
     gap: 1.5rem;
     transform: translateY(-1rem);
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-action {
+    width: 100%;
   }
 
   .second-brain-chat {
