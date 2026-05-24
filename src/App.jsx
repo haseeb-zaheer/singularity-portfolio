@@ -670,7 +670,7 @@ function SecondBrainChat() {
         <span>Second Brain</span>
         <span>{isSending ? 'Retrieving Context' : 'Context Online'}</span>
       </div>
-      <div className="chatbox-messages" ref={messagesRef} aria-live="polite">
+      <div className="chatbox-messages" data-lenis-prevent ref={messagesRef} aria-live="polite">
         {messages.length === 0 ? (
           <div className="chatbox-empty">
             <p>Ask my second brain about projects, articles, workflows, or how I think through AI systems.</p>
