@@ -427,17 +427,92 @@ const secondBrainStarterQuestions = [
   'How does Haseeb like to work with teams?',
 ]
 
-function createChatMessage(role, content) {
+function createChatMessage(role, content, options = {}) {
   return {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     role,
     content,
+    ...options,
+  }
+}
+
+function parseSseBlock(block) {
+  let event = 'message'
+  const data = []
+
+  block.split('\n').forEach((line) => {
+    if (!line || line.startsWith(':')) return
+
+    const separatorIndex = line.indexOf(':')
+    const field = separatorIndex === -1 ? line : line.slice(0, separatorIndex)
+    const value = separatorIndex === -1 ? '' : line.slice(separatorIndex + 1).replace(/^ /, '')
+
+    if (field === 'event') {
+      event = value
+    } else if (field === 'data') {
+      data.push(value)
+    }
+  })
+
+  return {
+    event,
+    data: data.join('\n'),
+  }
+}
+
+async function readSseStream(response, onEvent) {
+  if (!response.body) {
+    throw new Error('The second brain returned an empty stream.')
+  }
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+
+      if (done) break
+
+      buffer = (buffer + decoder.decode(value, { stream: true })).replace(/\r\n/g, '\n')
+
+      while (buffer.includes('\n\n')) {
+        const separatorIndex = buffer.indexOf('\n\n')
+        const block = buffer.slice(0, separatorIndex)
+        buffer = buffer.slice(separatorIndex + 2)
+
+        if (block.trim()) {
+          onEvent(parseSseBlock(block))
+        }
+      }
+    }
+
+    buffer = (buffer + decoder.decode()).replace(/\r\n/g, '\n').trim()
+
+    if (buffer) {
+      onEvent(parseSseBlock(buffer))
+    }
+  } finally {
+    reader.releaseLock()
+  }
+}
+
+function parseSseJson(data) {
+  try {
+    return JSON.parse(data)
+  } catch {
+    return {}
   }
 }
 
 function ChatMessageContent({ message }) {
   if (message.role === 'user') {
     return <span className="chat-message-text">{message.content}</span>
+  }
+
+  if (!message.content && message.streaming) {
+    return <span className="chat-message-text chat-message-pending">Streaming...</span>
   }
 
   return (
@@ -462,6 +537,7 @@ ChatMessageContent.propTypes = {
   message: PropTypes.shape({
     content: PropTypes.string.isRequired,
     role: PropTypes.oneOf(['user', 'assistant']).isRequired,
+    streaming: PropTypes.bool,
   }).isRequired,
 }
 
@@ -485,15 +561,24 @@ function SecondBrainChat() {
     if (!trimmed || isSending) return
 
     const userMessage = createChatMessage('user', trimmed)
+    const assistantMessage = createChatMessage('assistant', '', { streaming: true })
     const history = messages.map((message) => ({
       role: message.role,
       content: message.content,
     }))
 
-    setMessages((currentMessages) => [...currentMessages, userMessage])
+    const updateAssistantMessage = (updater) => {
+      setMessages((currentMessages) =>
+        currentMessages.map((message) => (message.id === assistantMessage.id ? updater(message) : message)),
+      )
+    }
+
+    setMessages((currentMessages) => [...currentMessages, userMessage, assistantMessage])
     setInput('')
     setError('')
     setIsSending(true)
+
+    let streamedAnswer = ''
 
     try {
       const response = await fetch('/api/second-brain-chat', {
@@ -506,17 +591,68 @@ function SecondBrainChat() {
           history,
         }),
       })
-      const payload = await response.json().catch(() => ({}))
 
-      if (!response.ok) {
-        throw new Error(payload.error || 'The second brain is unavailable right now.')
+      const contentType = response.headers.get('content-type') || ''
+
+      if (!contentType.toLowerCase().includes('text/event-stream')) {
+        const payload = await response.json().catch(() => ({}))
+
+        if (!response.ok) {
+          throw new Error(payload.error || 'The second brain is unavailable right now.')
+        }
+
+        streamedAnswer = payload.answer || 'I could not find an answer for that.'
+        updateAssistantMessage((message) => ({
+          ...message,
+          content: streamedAnswer,
+          streaming: false,
+        }))
+        return
       }
 
-      setMessages((currentMessages) => [
-        ...currentMessages,
-        createChatMessage('assistant', payload.answer || 'I could not find an answer for that.'),
-      ])
+      if (!response.ok) {
+        throw new Error('The second brain is unavailable right now.')
+      }
+
+      let completed = false
+
+      await readSseStream(response, ({ event, data }) => {
+        const payload = parseSseJson(data)
+
+        if (event === 'delta' && typeof payload.text === 'string') {
+          streamedAnswer += payload.text
+          updateAssistantMessage((message) => ({
+            ...message,
+            content: streamedAnswer,
+          }))
+        }
+
+        if (event === 'done') {
+          completed = true
+          updateAssistantMessage((message) => ({
+            ...message,
+            streaming: false,
+          }))
+        }
+
+        if (event === 'error') {
+          throw new Error(payload.error || 'The second brain stream was interrupted.')
+        }
+      })
+
+      if (!completed) {
+        throw new Error('The second brain stream ended early.')
+      }
     } catch (sendError) {
+      if (streamedAnswer) {
+        updateAssistantMessage((message) => ({
+          ...message,
+          content: streamedAnswer,
+          streaming: false,
+        }))
+      } else {
+        setMessages((currentMessages) => currentMessages.filter((message) => message.id !== assistantMessage.id))
+      }
       setError(sendError instanceof Error ? sendError.message : 'Something went wrong.')
     } finally {
       setIsSending(false)
@@ -553,7 +689,6 @@ function SecondBrainChat() {
             </div>
           ))
         )}
-        {isSending ? <div className="chat-message chat-message-assistant">Thinking...</div> : null}
       </div>
       {error ? <div className="chatbox-error">{error}</div> : null}
       <form className="chatbox-form" onSubmit={handleSubmit}>

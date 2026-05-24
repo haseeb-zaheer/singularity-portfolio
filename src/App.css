@@ -407,6 +407,10 @@ section {
   white-space: pre-wrap;
 }
 
+.chat-message-pending {
+  color: var(--fg-dark);
+}
+
 .chat-message-assistant p,
 .chat-message-assistant ul,
 .chat-message-assistant ol {
