@@ -74,6 +74,18 @@ SECOND_BRAIN_REQUEST_TIMEOUT_MS=55000
 
 `SECOND_BRAIN_BACKEND_SECRET` must match the protected RAG backend secret and must only be set in Vercel/server-side environments. Do not expose it through `VITE_*` variables.
 
+Second-brain chat flow:
+
+```text
+Browser chatbox
+ -> /api/second-brain-chat Vercel function
+ -> https://rag.haseebzaheer.dev/api/chat
+ -> backend streams Server-Sent Events
+ -> Vercel function passes the stream through to the browser
+```
+
+The browser never receives `SECOND_BRAIN_BACKEND_SECRET`. The proxy keeps public validation, per-visitor rate limits, request timeout handling, and JSON error responses for validation/rate-limit/backend pre-stream failures. Successful chat responses are `text/event-stream` and the UI renders `delta` events progressively until the backend sends `done`.
+
 Custom domain:
 
 - `haseebzaheer.dev`
