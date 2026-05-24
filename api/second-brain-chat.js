@@ -15,6 +15,10 @@ function sendJson(response, status, data) {
   response.status(status).json(data)
 }
 
+function isEventStream(response) {
+  return response.headers.get('content-type')?.toLowerCase().includes('text/event-stream')
+}
+
 function getBackendSecret() {
   return process.env.SECOND_BRAIN_BACKEND_SECRET?.trim() || process.env.BACKEND_API_SECRET?.trim()
 }
@@ -134,6 +138,44 @@ function normalizeHistory(history) {
     .slice(-MAX_HISTORY_MESSAGES)
 }
 
+async function streamBackendResponse(backendResponse, response) {
+  if (!backendResponse.body) {
+    return sendJson(response, 502, {
+      error: 'The second brain returned an empty stream.',
+      code: 'invalid_backend_response',
+    })
+  }
+
+  response.status(backendResponse.status)
+  response.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+  response.setHeader('Cache-Control', 'no-cache, no-transform')
+  response.setHeader('Connection', 'keep-alive')
+  response.setHeader('X-Accel-Buffering', 'no')
+
+  const reader = backendResponse.body.getReader()
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+
+      if (done) break
+
+      response.write(Buffer.from(value))
+    }
+  } catch {
+    if (!response.writableEnded) {
+      response.write(
+        'event: error\ndata: {"error":"The second brain stream was interrupted.","code":"proxy_stream_error"}\n\n',
+      )
+    }
+  } finally {
+    reader.releaseLock()
+    if (!response.writableEnded) {
+      response.end()
+    }
+  }
+}
+
 export default async function handler(request, response) {
   if (request.method !== 'POST') {
     response.setHeader('Allow', 'POST')
@@ -185,6 +227,11 @@ export default async function handler(request, response) {
   const timeoutMs = positiveIntegerFromEnv('SECOND_BRAIN_REQUEST_TIMEOUT_MS', DEFAULT_TIMEOUT_MS)
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), timeoutMs)
+  response.on('close', () => {
+    if (!response.writableEnded) {
+      controller.abort()
+    }
+  })
 
   try {
     const backendResponse = await fetch(backendUrl, {
@@ -201,15 +248,20 @@ export default async function handler(request, response) {
         history: normalizeHistory(body.history),
       }),
     })
-    const payload = await backendResponse.json().catch(() => ({
-      error: 'The second brain returned an unreadable response.',
-      code: 'invalid_backend_response',
-    }))
     const backendRequestId = backendResponse.headers.get('x-request-id')
 
     if (backendRequestId) {
       response.setHeader('x-request-id', backendRequestId)
     }
+
+    if (isEventStream(backendResponse)) {
+      return await streamBackendResponse(backendResponse, response)
+    }
+
+    const payload = await backendResponse.json().catch(() => ({
+      error: 'The second brain returned an unreadable response.',
+      code: 'invalid_backend_response',
+    }))
 
     return sendJson(response, backendResponse.status, payload)
   } catch (error) {
