@@ -5,9 +5,11 @@ Personal portfolio for Haseeb Zaheer, built as a Vite + React single-page site a
 ## Features
 
 - Animated Three.js background field
-- System-initialization loading sequence
+- System-initialization loading sequence on direct landing-page entry
+- Article archive and detail pages with lightweight route transitions
 - Lenis smooth scrolling
 - Hide-on-scroll fixed header
+- Embedded second-brain chat through a server-side Vercel proxy
 - Public-safe 3E field work section
 - Responsive dark technical interface
 
@@ -50,6 +52,62 @@ Run lint checks:
 ```bash
 npm run lint
 ```
+
+## Articles
+
+Articles are stored as Markdown files under:
+
+```text
+src/content/articles/<number>-<slug>/index.md
+```
+
+Use a numeric folder prefix to keep local browsing ordered, for example:
+
+```text
+src/content/articles/01-revisiting-the-roots-of-ai/index.md
+src/content/articles/02-building-private-rag-backend-portfolio-chatbot/index.md
+```
+
+The numeric prefix is only for the filesystem. It is not shown on the site, and it is not part of the public URL. Public article URLs come from the article frontmatter `slug` field:
+
+```markdown
+---
+title: "Revisiting the Roots of AI"
+slug: "revisiting-the-roots-of-ai"
+date: "2026-05-19"
+description: "Short public-safe summary."
+tags: ["AI", "RAG"]
+readTime: "8 min"
+type: "Article"
+---
+```
+
+Article images live beside the article:
+
+```text
+src/content/articles/01-revisiting-the-roots-of-ai/images/image1.png
+```
+
+Reference local article images from Markdown with a relative path:
+
+```markdown
+![Descriptive alt text](./images/image1.png)
+```
+
+The article loader resolves images through the real folder path, so prefixed folders still work with clean public slugs.
+
+## Route Loading
+
+The full custom boot loader is intended only for direct visits to the landing page `/`.
+
+Article routes use a smaller archive-style loader instead:
+
+```text
+/articles
+/articles/<slug>
+```
+
+During article navigation, the page behind the loader is blurred. The article loader waits for the target route to render, fonts to be ready, and article images to finish loading or error before it exits. In-site navigation back to `/` should not show the full custom boot loader.
 
 ## Deployment
 
@@ -98,3 +156,4 @@ DNS is managed through Cloudflare and points to Vercel.
 - Internal/private experience notes are intentionally ignored through `.gitignore`.
 - Screenshots and local Playwright artifacts are not part of the repository.
 - The portfolio copy avoids internal 3E project or repository names.
+- After changing article content, route loaders, or Markdown rendering, run `npm run lint` and `npm run build`.

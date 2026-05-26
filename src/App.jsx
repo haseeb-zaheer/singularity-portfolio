@@ -9,46 +9,46 @@ import './App.css'
 
 const expertise = [
   {
-    title: ['Agentic AI', 'Systems'],
+    title: ['Multi-Agent AI', 'Systems'],
     items: [
-      ['ORCHESTRATION', 'Multi-agent workflows with orchestrators, domain agents, and tool-backed execution paths.'],
-      ['MCP TOOLING', 'Source-specific MCP interfaces for querying, mapping, progress tracking, and controlled automation.'],
+      ['ORCHESTRATION', 'Multi-agent systems with orchestration, specialized agents, and tool-backed execution paths.'],
+      ['AGENT INTERFACES', 'Scoped MCP interfaces for source-specific querying, mapping, progress tracking, and controlled automation.'],
       ['GUARDRAILS', 'Risk-aware agent design with boundaries for sensitive data handling, reliability, and traceability.'],
     ],
   },
   {
     title: ['Regulatory Data', 'Engineering'],
     items: [
-      ['MODERNIZATION', 'Migration support across legacy database-backed systems and modern API-driven data platforms.'],
-      ['INGESTION', 'API data ingestion into downstream application tables with cleaner, consolidated processing paths.'],
-      ['TRANSFORMS', 'Staging and transformation workflows that shape raw regulatory data into product-ready structures.'],
+      ['MODERNIZATION', 'Modernizing legacy database-backed workflows into API-driven regulatory data platforms.'],
+      ['INGESTION', 'API ingestion pipelines that normalize regulatory data for downstream product models.'],
+      ['TRANSFORMS', 'Staging and transformation layers that convert raw regulatory inputs into product-ready data structures.'],
     ],
   },
   {
     title: ['AI Workflow', 'Automation'],
     items: [
-      ['DELIVERY LOOPS', 'AI-assisted planning, implementation, testing, review, git operations, and handoff workflows.'],
-      ['EVALUATION', 'Translation quality optimization using multilingual validation and evaluation-driven iteration.'],
-      ['DEPLOYMENT', 'Dockerized agent and workflow deployment patterns for cloud/serverless environments.'],
+      ['DELIVERY LOOPS', 'AI-accelerated delivery loops across planning, implementation, testing, review, git operations, and handoff.'],
+      ['EVALUATION', 'Evaluation-driven translation quality improvements using multilingual validation loops.'],
+      ['DEPLOYMENT', 'Containerized agent services and serverless deployment patterns for cloud delivery.'],
     ],
   },
 ]
 
 const fieldWork = [
   {
-    title: 'Multi-Agent Regulatory Analysis',
+    title: 'Multi-Agent Regulatory Mapping System',
     meta: '2025 / 3E',
     body: (
       <>
         Built a <span className="text-accent">multi-agent regulatory mapping system</span> with orchestrated domain
-        agents, scoped <span className="text-accent">MCP tools</span>, <span className="text-accent">guardrails</span>,
-        tracking, and <span className="text-accent">observability</span> for long-running parity workflows.
+        agents, scoped <span className="text-accent">MCP interfaces</span>, <span className="text-accent">guardrails</span>,
+        run tracking, and <span className="text-accent">observability</span> for long-running regulatory comparison workflows.
       </>
     ),
     metrics: [
       ['ARCHITECTURE:', 'Orchestrator + domain agents'],
       ['SAFETY:', 'Guardrails + scoped tools'],
-      ['VISIBILITY:', 'Tracking + observability'],
+      ['VISIBILITY:', 'Run tracking + visibility'],
     ],
   },
   {
@@ -57,47 +57,47 @@ const fieldWork = [
     body: (
       <>
         An <span className="text-accent">AI-powered study workspace</span> that turns YouTube lectures into
-        transcripts, exam notes, and transcript-grounded Q&A through a <span className="text-accent">RAG chatbot</span>.
+        transcripts, exam notes, and retrieval-grounded Q&A over lecture content.
         Built with <span className="text-accent">Upstash Vector</span> for embedding retrieval and{' '}
         <span className="text-accent">Upstash Redis</span> for rate limiting and caching.
       </>
     ),
     metrics: [
       ['INPUT:', 'YouTube lectures'],
-      ['AI FLOW:', 'RAG chatbot + exam notes'],
+      ['AI FLOW:', 'Retrieval Q&A + exam notes'],
       ['SYSTEM:', 'Gemini + Upstash Vector/Redis'],
     ],
   },
   {
-    title: 'Regulatory Data Pipeline',
+    title: 'Regulatory Data Ingestion Pipeline',
     meta: '2025 / 3E',
     body: (
       <>
         Built <span className="text-accent">API ingestion</span> and{' '}
-        <span className="text-accent">transformation workflows</span> that create cleaner handoff points for{' '}
-        <span className="text-accent">downstream data models</span> and product-ready regulatory structures.
+        <span className="text-accent">transformation pipelines</span> that normalize regulatory source data for{' '}
+        <span className="text-accent">downstream models</span> and product-ready application structures.
       </>
     ),
     metrics: [
       ['SOURCE:', 'API ingestion'],
-      ['HANDOFF:', 'Downstream data readiness'],
-      ['OUTCOME:', 'Consolidated processing paths'],
+      ['HANDOFF:', 'Model-ready data handoff'],
+      ['OUTCOME:', 'Consolidated ingestion paths'],
     ],
   },
   {
-    title: 'AI Workflow Automation',
+    title: 'AI-Augmented Delivery Automation',
     meta: '2025 / 3E',
     body: (
       <>
-        Designed <span className="text-accent">AI-assisted</span> planning, implementation, testing, review, and{' '}
-        <span className="text-accent">delivery workflows</span>, while improving multilingual translation quality
+        Designed <span className="text-accent">AI-augmented</span> delivery loops across planning, implementation,
+        testing, review, and <span className="text-accent">handoff</span>, while improving multilingual translation quality
         through <span className="text-accent">evaluation-backed iteration</span>.
       </>
     ),
     metrics: [
       ['DELIVERY:', '~50% cycle-time reduction'],
       ['QUALITY:', '+15% translation accuracy'],
-      ['VALIDATION:', 'Evaluation-backed changes'],
+      ['VALIDATION:', 'Evaluation-backed iteration'],
     ],
   },
 ]
@@ -174,7 +174,7 @@ function LoadingOverlay({ onDone, onReveal }) {
       <div className="loader-container">
         <div className="loader-heading">
           <div className="serif-text loader-name">HASEEB ZAHEER</div>
-          <div className="mono-text loader-version">Agentic AI Portfolio</div>
+          <div className="mono-text loader-version">Applied AI Portfolio</div>
         </div>
 
         <div className="loader-meta">
@@ -372,10 +372,10 @@ function NeuralField() {
 function Header({ isHidden }) {
   return (
     <header className={`site-header ${isHidden ? 'site-header-hidden' : ''}`}>
-      <div className="brand-cluster">
+      <a className="brand-cluster" href="/" aria-label="Go to home page">
         <div className="serif-text brand-name">Haseeb Zaheer</div>
-        <div className="status-muted">Agentic AI Engineer @ 3E</div>
-      </div>
+        <div className="status-muted">AI Engineer @ 3E</div>
+      </a>
       <div className="system-status">
         <span>Agent.Runtime: Online</span>
         <span className="status-active">[ACTIVE] PORTFOLIO_V1</span>
@@ -392,10 +392,10 @@ function Annotation({ align = 'left' }) {
   const left = align === 'left'
   const data = left
     ? {
-        title: ['Agent', 'Workflow'],
+        title: ['AI', 'Systems'],
         rows: [
-          ['04', 'Systems', 'Built'],
-          ['MCP', 'Tools', 'Active'],
+          ['04', 'Applied', 'Systems'],
+          ['MCP', 'Agent', 'Interfaces'],
           ['15%', 'Quality', 'Gain'],
         ],
       }
@@ -403,8 +403,8 @@ function Annotation({ align = 'left' }) {
         title: ['Delivery', 'Signal'],
         rows: [
           ['~50%', 'Cycle', 'Reduction'],
-          ['AWS', 'Lambda', 'Deploy'],
-          ['3E', 'Production', 'Work'],
+          ['AWS', 'Serverless', 'Systems'],
+          ['3E', 'Production', 'Systems'],
         ],
       }
 
@@ -748,7 +748,7 @@ function Hero({ onSectionScroll }) {
         <div className="hero-core">
           <div className="hero-title-block">
             <h1 className="serif-text hero-title">Haseeb Zaheer</h1>
-            <p className="mono-text hero-kicker">Engineering Multi-Agent AI Workflows</p>
+            <p className="mono-text hero-kicker">Building Reliable Multi-Agent AI Systems</p>
           </div>
           <div className="hero-actions" aria-label="Primary actions">
             <a className="hero-action hero-action-primary" href="#second-brain" onClick={(event) => scrollToSection(event, '#second-brain')}>
@@ -763,9 +763,9 @@ function Hero({ onSectionScroll }) {
       </div>
       <div className="hero-footer">
         <div className="hero-summary">
-          Building <span className="text-accent">multi-agent systems</span>,{' '}
-          <span className="text-accent">AI-enabled workflows</span>, and automation pipelines that turn complex
-          operational problems into <span className="text-accent">reliable engineering products</span>.
+          Building <span className="text-accent">multi-agent AI systems</span>,{' '}
+          <span className="text-accent">retrieval-backed products</span>, and automation pipelines that turn complex
+          operational work into <span className="text-accent">reliable software</span>.
         </div>
         <nav className="hero-nav" aria-label="Portfolio sections">
           <a href="#second-brain" onClick={(event) => scrollToSection(event, '#second-brain')}>
@@ -826,12 +826,12 @@ TerminalBlock.propTypes = {
 function SecondBrainSection() {
   return (
     <section id="second-brain" className="content-section second-brain-section">
-      <SectionHeader title="Ask My Second Brain" section="01" />
+      <SectionHeader title="Ask My Engineering Second Brain" section="01" />
       <div className="second-brain-panel">
         <div className="second-brain-copy">
-          <div className="second-brain-eyebrow">Private RAG Interface</div>
+          <div className="second-brain-eyebrow">Retrieval-Grounded Portfolio Interface</div>
           <p className="second-brain-lead">
-            Ask about my AI systems, engineering work, collaboration style, or fit for a role.
+            Ask about my AI systems, project architecture, delivery style, or fit for a role.
           </p>
           <div className="second-brain-signal-stack" aria-label="Second brain context signals">
             <div className="second-brain-signal">
@@ -840,11 +840,11 @@ function SecondBrainSection() {
             </div>
             <div className="second-brain-signal">
               <span>Route</span>
-              <strong>Portfolio proxy</strong>
+              <strong>Secure streaming proxy</strong>
             </div>
             <div className="second-brain-signal">
               <span>Mode</span>
-              <strong>Streaming retrieval</strong>
+              <strong>Retrieval + SSE streaming</strong>
             </div>
           </div>
         </div>
@@ -880,8 +880,8 @@ function ExpertiseSection() {
       <div className="about-footer">
         <div>
           Designing <span className="text-accent">practical AI systems</span> with{' '}
-          <span className="text-accent">guardrails</span>, <span className="text-accent">observability</span>, and
-          maintainable handoff paths.
+          <span className="text-accent">guardrails</span>, <span className="text-accent">observability</span>,
+          evaluation loops, and maintainable delivery paths.
         </div>
         <blockquote className="serif-text">&quot;Practical architecture over novelty for its own sake.&quot;</blockquote>
       </div>
@@ -938,8 +938,8 @@ function ContactSection() {
         <div className="transparent-card">
           <h2 className="serif-text">Get in Touch</h2>
           <p>
-            Open to <span className="text-accent">full-time roles</span>,{' '}
-            <span className="text-accent">Agentic AI</span>, and{' '}
+            Open to <span className="text-accent">full-time AI engineering roles</span>,{' '}
+            <span className="text-accent">applied agent systems</span>, and{' '}
             <span className="text-accent">selective product builds</span>.
           </p>
           <div className="contact-links">
@@ -964,7 +964,7 @@ function ContactSection() {
 }
 
 function FooterCode() {
-  return <div className="footer-code">2026 HASEEB ZAHEER // AGENTIC AI SYSTEMS // HASEEBZAHEER.DEV</div>
+  return <div className="footer-code">2026 HASEEB ZAHEER // APPLIED AI SYSTEMS // HASEEBZAHEER.DEV</div>
 }
 
 function YouTubeEmbed({ videoId }) {
@@ -1170,6 +1170,8 @@ function App() {
   const lenisRef = useRef(null)
   const articleNavigationTimeoutsRef = useRef([])
   const articleLoaderStartedAtRef = useRef(Date.now())
+  const isSiteVisibleRef = useRef(isSiteVisible)
+  const articleRouteWasVisibleRef = useRef(isSiteVisible)
 
   const revealSite = useCallback(() => {
     setIsSiteVisible(true)
@@ -1216,6 +1218,7 @@ function App() {
       }
 
       articleLoaderStartedAtRef.current = Date.now()
+      articleRouteWasVisibleRef.current = isSiteVisibleRef.current
       setPendingArticlePath(normalizedNextPath)
       setIsArticleLoaderExiting(false)
       setArticleLoaderLabel(normalizedNextPath === '/articles' ? 'Opening article archive' : 'Opening article')
@@ -1228,6 +1231,10 @@ function App() {
     },
     [clearArticleNavigationTimeouts, scheduleArticleNavigation],
   )
+
+  useEffect(() => {
+    isSiteVisibleRef.current = isSiteVisible
+  }, [isSiteVisible])
 
   const scrollToSection = useCallback((target) => {
     if (lenisRef.current) {
@@ -1272,19 +1279,23 @@ function App() {
       }, 520)
     }
 
-    const maxWait = window.setTimeout(finishArticleLoading, 4000)
+    const maxWait = window.setTimeout(() => {
+      setIsSiteVisible(true)
+      finishArticleLoading()
+    }, 4000)
 
     waitForArticleRouteContent().then(() => {
       if (cancelled) return
 
       const elapsed = Date.now() - articleLoaderStartedAtRef.current
-      const pageRevealDelay = isSiteVisible ? 0 : 900
-      const remainingDelay = Math.max(0, 520 + pageRevealDelay - elapsed)
+      const pageRevealDelay = articleRouteWasVisibleRef.current ? 0 : 1000
+      const remainingDelay = Math.max(0, 520 - elapsed) + pageRevealDelay
+
+      setIsSiteVisible(true)
 
       window.setTimeout(() => {
         if (cancelled) return
         window.clearTimeout(maxWait)
-        setIsSiteVisible(true)
         finishArticleLoading()
       }, remainingDelay)
     })
@@ -1293,7 +1304,7 @@ function App() {
       cancelled = true
       window.clearTimeout(maxWait)
     }
-  }, [articleLoaderLabel, isSiteVisible, pendingArticlePath, routePath])
+  }, [articleLoaderLabel, pendingArticlePath, routePath])
 
   useEffect(() => {
     const handleClick = (event) => {
