@@ -203,9 +203,9 @@ LoadingOverlay.propTypes = {
   onReveal: PropTypes.func.isRequired,
 }
 
-function ArticleRouteLoader({ label = 'Loading article index' }) {
+function ArticleRouteLoader({ isExiting = false, label = 'Loading article index' }) {
   return (
-    <div className="article-route-loader" role="status" aria-live="polite">
+    <div className={`article-route-loader ${isExiting ? 'article-route-loader-exit' : ''}`} role="status" aria-live="polite">
       <div className="article-route-loader-panel">
         <div className="article-route-loader-kicker">Portfolio Archive</div>
         <div className="article-route-loader-title">{label}</div>
@@ -218,6 +218,7 @@ function ArticleRouteLoader({ label = 'Loading article index' }) {
 }
 
 ArticleRouteLoader.propTypes = {
+  isExiting: PropTypes.bool,
   label: PropTypes.string,
 }
 
@@ -1160,6 +1161,7 @@ function App() {
         : 'Opening article'
       : '',
   )
+  const [isArticleLoaderExiting, setIsArticleLoaderExiting] = useState(false)
   const [pendingArticlePath, setPendingArticlePath] = useState(isArticlePath(initialPath) ? initialPath : '')
   const [isHeaderHidden, setIsHeaderHidden] = useState(false)
   const isArticlesIndexRoute = routePath === '/articles'
@@ -1206,6 +1208,7 @@ function App() {
       if (!isArticlePath(normalizedNextPath)) {
         setRoutePath(normalizedNextPath)
         setIsSiteVisible(true)
+        setIsArticleLoaderExiting(false)
         setArticleLoaderLabel('')
         setPendingArticlePath('')
         window.scrollTo({ top: 0, behavior: 'instant' })
@@ -1214,6 +1217,7 @@ function App() {
 
       articleLoaderStartedAtRef.current = Date.now()
       setPendingArticlePath(normalizedNextPath)
+      setIsArticleLoaderExiting(false)
       setArticleLoaderLabel(normalizedNextPath === '/articles' ? 'Opening article archive' : 'Opening article')
       setIsSiteVisible(true)
 
@@ -1252,24 +1256,36 @@ function App() {
     if (!articleLoaderLabel || !pendingArticlePath || routePath !== pendingArticlePath) return undefined
 
     let cancelled = false
-    const maxWait = window.setTimeout(() => {
-      if (cancelled) return
-      setArticleLoaderLabel('')
-      setPendingArticlePath('')
-    }, 4000)
+    let finished = false
+    const finishArticleLoading = () => {
+      if (cancelled || finished) return
+
+      finished = true
+
+      setIsArticleLoaderExiting(true)
+
+      window.setTimeout(() => {
+        if (cancelled) return
+        setArticleLoaderLabel('')
+        setPendingArticlePath('')
+        setIsArticleLoaderExiting(false)
+      }, 520)
+    }
+
+    const maxWait = window.setTimeout(finishArticleLoading, 4000)
 
     waitForArticleRouteContent().then(() => {
       if (cancelled) return
 
       const elapsed = Date.now() - articleLoaderStartedAtRef.current
-      const remainingDelay = Math.max(0, 520 - elapsed)
+      const pageRevealDelay = isSiteVisible ? 0 : 900
+      const remainingDelay = Math.max(0, 520 + pageRevealDelay - elapsed)
 
       window.setTimeout(() => {
         if (cancelled) return
         window.clearTimeout(maxWait)
         setIsSiteVisible(true)
-        setArticleLoaderLabel('')
-        setPendingArticlePath('')
+        finishArticleLoading()
       }, remainingDelay)
     })
 
@@ -1277,7 +1293,7 @@ function App() {
       cancelled = true
       window.clearTimeout(maxWait)
     }
-  }, [articleLoaderLabel, pendingArticlePath, routePath])
+  }, [articleLoaderLabel, isSiteVisible, pendingArticlePath, routePath])
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -1382,7 +1398,7 @@ function App() {
         )}
       </div>
       {isLoaderMounted && <LoadingOverlay onDone={removeLoader} onReveal={revealSite} />}
-      {articleLoaderLabel && <ArticleRouteLoader label={articleLoaderLabel} />}
+      {articleLoaderLabel && <ArticleRouteLoader isExiting={isArticleLoaderExiting} label={articleLoaderLabel} />}
     </>
   )
 }

@@ -69,11 +69,25 @@
   pointer-events: auto;
 }
 
+.article-route-loader-exit {
+  animation: article-loader-exit 520ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.article-route-loader-exit .article-route-loader-panel {
+  transform: translateY(-0.35rem);
+  opacity: 0;
+  transition:
+    opacity 420ms ease,
+    transform 520ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
 .article-route-loader-panel {
   width: min(34rem, 100%);
   border-top: 1px solid var(--fg-dark);
   border-bottom: 1px solid #222;
   padding: 1.35rem 0 1.5rem;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .article-route-loader-kicker {
@@ -258,6 +272,18 @@
 
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes article-loader-exit {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(14px) saturate(0.85);
+  }
+
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(2px) saturate(1);
   }
 }
 
