@@ -14,6 +14,10 @@ function toArticlePath(path) {
   return path.replace('./articles/', '').replace('/index.md', '')
 }
 
+function stripFolderPrefix(path) {
+  return path.replace(/(^|\/)\d{2,}-/g, '$1')
+}
+
 function parseFrontmatterValue(value) {
   const trimmedValue = value.trim()
 
@@ -61,7 +65,8 @@ function parseArticleMarkdown(rawArticle) {
 
 function normalizeArticle(rawArticle, path) {
   const { content, data } = parseArticleMarkdown(rawArticle)
-  const folderSlug = toArticlePath(path)
+  const folderPath = toArticlePath(path)
+  const folderSlug = stripFolderPrefix(folderPath)
   const slug = data.slug || folderSlug
   const title = data.title || slug
   const normalizedContent = content.replace(new RegExp(`^#{1,2}\\s+${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\n+`), '')
@@ -70,6 +75,7 @@ function normalizeArticle(rawArticle, path) {
     content: normalizedContent,
     date: data.date || '',
     description: data.description || '',
+    folderPath,
     readTime: data.readTime || '',
     slug,
     tags: Array.isArray(data.tags) ? data.tags : [],
@@ -82,6 +88,8 @@ export const articles = Object.entries(articleModules)
   .map(([path, rawArticle]) => normalizeArticle(rawArticle, path))
   .sort((a, b) => b.date.localeCompare(a.date))
 
+const articleFolderBySlug = Object.fromEntries(articles.map((article) => [article.slug, article.folderPath]))
+
 export function getArticleBySlug(slug) {
   return articles.find((article) => article.slug === slug)
 }
@@ -89,7 +97,8 @@ export function getArticleBySlug(slug) {
 export function resolveArticleImage(articleSlug, src) {
   if (!src?.startsWith('./images/')) return src
 
-  const imagePath = `./articles/${articleSlug}/${src.replace('./', '')}`
+  const articleFolder = articleFolderBySlug[articleSlug] || articleSlug
+  const imagePath = `./articles/${articleFolder}/${src.replace('./', '')}`
   return articleImageModules[imagePath] || src
 }
 

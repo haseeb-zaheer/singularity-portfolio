@@ -203,6 +203,24 @@ LoadingOverlay.propTypes = {
   onReveal: PropTypes.func.isRequired,
 }
 
+function ArticleRouteLoader({ label = 'Loading article index' }) {
+  return (
+    <div className="article-route-loader" role="status" aria-live="polite">
+      <div className="article-route-loader-panel">
+        <div className="article-route-loader-kicker">Portfolio Archive</div>
+        <div className="article-route-loader-title">{label}</div>
+        <div className="article-route-loader-bar" aria-hidden="true">
+          <span />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+ArticleRouteLoader.propTypes = {
+  label: PropTypes.string,
+}
+
 const neuralFieldQualityPresets = {
   reduced: { dpr: 1, fps: 0, lines: 1200, segments: 24 },
   medium: { dpr: 1.25, fps: 30, lines: 3500, segments: 40 },
@@ -1101,15 +1119,55 @@ function ArticleNotFoundPage() {
   )
 }
 
+function normalizedPathFromLocation() {
+  return window.location.pathname.replace(/\/$/, '') || '/'
+}
+
+function isArticlePath(path) {
+  return path === '/articles' || path.startsWith('/articles/')
+}
+
+function waitForArticleRouteContent() {
+  const routeElement = document.querySelector('.article-page')
+  const routeImages = Array.from(routeElement?.querySelectorAll('img') || [])
+  const imagePromises = routeImages.map((image) => {
+    if (image.complete) return Promise.resolve()
+
+    return new Promise((resolve) => {
+      image.addEventListener('load', resolve, { once: true })
+      image.addEventListener('error', resolve, { once: true })
+    })
+  })
+
+  return Promise.all([
+    document.fonts?.ready || Promise.resolve(),
+    new Promise((resolve) => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve))),
+    ...imagePromises,
+  ])
+}
+
 function App() {
-  const [isSiteVisible, setIsSiteVisible] = useState(false)
-  const [isLoaderMounted, setIsLoaderMounted] = useState(true)
+  const initialPathRef = useRef(normalizedPathFromLocation())
+  const initialPath = initialPathRef.current
+  const startsOnLanding = initialPath === '/'
+  const [routePath, setRoutePath] = useState(initialPath)
+  const [isSiteVisible, setIsSiteVisible] = useState(startsOnLanding ? false : !isArticlePath(initialPath))
+  const [isLoaderMounted, setIsLoaderMounted] = useState(startsOnLanding)
+  const [articleLoaderLabel, setArticleLoaderLabel] = useState(
+    !startsOnLanding && isArticlePath(initialPath)
+      ? initialPath === '/articles'
+        ? 'Opening article archive'
+        : 'Opening article'
+      : '',
+  )
+  const [pendingArticlePath, setPendingArticlePath] = useState(isArticlePath(initialPath) ? initialPath : '')
   const [isHeaderHidden, setIsHeaderHidden] = useState(false)
-  const pathname = window.location.pathname.replace(/\/$/, '') || '/'
-  const isArticlesIndexRoute = pathname === '/articles'
-  const articleSlug = pathname.startsWith('/articles/') ? decodeURIComponent(pathname.replace('/articles/', '')) : null
+  const isArticlesIndexRoute = routePath === '/articles'
+  const articleSlug = routePath.startsWith('/articles/') ? decodeURIComponent(routePath.replace('/articles/', '')) : null
   const activeArticle = articleSlug ? getArticleBySlug(articleSlug) : null
   const lenisRef = useRef(null)
+  const articleNavigationTimeoutsRef = useRef([])
+  const articleLoaderStartedAtRef = useRef(Date.now())
 
   const revealSite = useCallback(() => {
     setIsSiteVisible(true)
@@ -1118,6 +1176,54 @@ function App() {
   const removeLoader = useCallback(() => {
     setIsLoaderMounted(false)
   }, [])
+
+  const clearArticleNavigationTimeouts = useCallback(() => {
+    articleNavigationTimeoutsRef.current.forEach((id) => window.clearTimeout(id))
+    articleNavigationTimeoutsRef.current = []
+  }, [])
+
+  const scheduleArticleNavigation = useCallback((callback, delay) => {
+    const id = window.setTimeout(() => {
+      articleNavigationTimeoutsRef.current = articleNavigationTimeoutsRef.current.filter((timeoutId) => timeoutId !== id)
+      callback()
+    }, delay)
+    articleNavigationTimeoutsRef.current.push(id)
+  }, [])
+
+  const startArticleNavigation = useCallback(
+    (nextPath, options = {}) => {
+      const normalizedNextPath = nextPath.replace(/\/$/, '') || '/'
+      if (!isArticlePath(normalizedNextPath) && normalizedNextPath !== '/') return
+
+      clearArticleNavigationTimeouts()
+
+      const currentPath = normalizedPathFromLocation()
+
+      if (options.push !== false && normalizedNextPath !== currentPath) {
+        window.history.pushState({}, '', normalizedNextPath)
+      }
+
+      if (!isArticlePath(normalizedNextPath)) {
+        setRoutePath(normalizedNextPath)
+        setIsSiteVisible(true)
+        setArticleLoaderLabel('')
+        setPendingArticlePath('')
+        window.scrollTo({ top: 0, behavior: 'instant' })
+        return
+      }
+
+      articleLoaderStartedAtRef.current = Date.now()
+      setPendingArticlePath(normalizedNextPath)
+      setArticleLoaderLabel(normalizedNextPath === '/articles' ? 'Opening article archive' : 'Opening article')
+      setIsSiteVisible(true)
+
+      scheduleArticleNavigation(() => {
+        setRoutePath(normalizedNextPath)
+        window.scrollTo({ top: 0, behavior: 'instant' })
+      }, 120)
+    },
+    [clearArticleNavigationTimeouts, scheduleArticleNavigation],
+  )
 
   const scrollToSection = useCallback((target) => {
     if (lenisRef.current) {
@@ -1141,6 +1247,73 @@ function App() {
       document.body.style.overflow = previousOverflow
     }
   }, [isLoaderMounted])
+
+  useEffect(() => {
+    if (!articleLoaderLabel || !pendingArticlePath || routePath !== pendingArticlePath) return undefined
+
+    let cancelled = false
+    const maxWait = window.setTimeout(() => {
+      if (cancelled) return
+      setArticleLoaderLabel('')
+      setPendingArticlePath('')
+    }, 4000)
+
+    waitForArticleRouteContent().then(() => {
+      if (cancelled) return
+
+      const elapsed = Date.now() - articleLoaderStartedAtRef.current
+      const remainingDelay = Math.max(0, 520 - elapsed)
+
+      window.setTimeout(() => {
+        if (cancelled) return
+        window.clearTimeout(maxWait)
+        setIsSiteVisible(true)
+        setArticleLoaderLabel('')
+        setPendingArticlePath('')
+      }, remainingDelay)
+    })
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(maxWait)
+    }
+  }, [articleLoaderLabel, pendingArticlePath, routePath])
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return
+      }
+
+      const eventTarget = event.target
+      if (!(eventTarget instanceof Element)) return
+
+      const link = eventTarget.closest('a[href]')
+      if (!link || link.target || link.hasAttribute('download')) return
+
+      const url = new URL(link.href, window.location.href)
+      const nextPath = url.pathname.replace(/\/$/, '') || '/'
+
+      if (url.origin !== window.location.origin || (!isArticlePath(nextPath) && nextPath !== '/')) return
+      if (url.hash && nextPath === normalizedPathFromLocation()) return
+
+      event.preventDefault()
+      startArticleNavigation(nextPath)
+    }
+
+    const handlePopState = () => {
+      startArticleNavigation(normalizedPathFromLocation(), { push: false })
+    }
+
+    document.addEventListener('click', handleClick)
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      document.removeEventListener('click', handleClick)
+      window.removeEventListener('popstate', handlePopState)
+      clearArticleNavigationTimeouts()
+    }
+  }, [clearArticleNavigationTimeouts, startArticleNavigation])
 
   useEffect(() => {
     if (!isSiteVisible) return undefined
@@ -1186,7 +1359,11 @@ function App() {
   return (
     <>
       <NeuralField />
-      <div className={`ui-wrapper ${isSiteVisible ? 'visible-content' : 'hidden-content'}`}>
+      <div
+        className={`ui-wrapper ${isSiteVisible ? 'visible-content' : 'hidden-content'} ${
+          articleLoaderLabel ? 'article-background-blur' : ''
+        }`}
+      >
         <Header isHidden={isHeaderHidden} />
         {isArticlesIndexRoute ? (
           <ArticlesIndexPage />
@@ -1205,6 +1382,7 @@ function App() {
         )}
       </div>
       {isLoaderMounted && <LoadingOverlay onDone={removeLoader} onReveal={revealSite} />}
+      {articleLoaderLabel && <ArticleRouteLoader label={articleLoaderLabel} />}
     </>
   )
 }
